@@ -28,7 +28,7 @@
 
 **Elfogadási kritériumok:**
 
-- **AC-01.1:** Adott, hogy a regisztrációs oldalon vagyok, amikor érvényes egyetemi e-mail-címet (`@*.unideb.hu`) és a jelszószabályoknak megfelelő jelszót adok meg, akkor a fiókom létrejön, és megerősítő e-mailt kapok.
+- **AC-01.1:** Adott, hogy a regisztrációs oldalon vagyok, amikor érvényes egyetemi e-mail-címet (`@*.nye.hu`) és a jelszószabályoknak megfelelő jelszót adok meg, akkor a fiókom létrejön, és megerősítő e-mailt kapok.
 - **AC-01.2:** Adott, hogy a regisztrációs oldalon vagyok, amikor nem egyetemi e-mail-címet adok meg, akkor a regisztráció elutasításra kerül „Csak egyetemi e-mail-cím fogadható el” üzenettel.
 - **AC-01.3:** Adott, hogy az e-mail-címemmel már létezik fiók, amikor újra regisztrálni próbálok, akkor a rendszer elutasítja a regisztrációt, és felajánlja a jelszó-visszaállítást.
 

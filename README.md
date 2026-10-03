@@ -7,7 +7,7 @@ Vizsgaidőszakban szinte lehetetlen szabad tanulószobát találni a campuson: a
 ## Mit tud majd az alkalmazás?
 
 **Hallgatóként**
-- regisztrálhatsz az egyetemi e-mail-címeddel (`@*.unideb.hu`);
+- regisztrálhatsz az egyetemi e-mail-címeddel (`@*.nye.hu`);
 - böngészheted a termeket, és szűrhetsz épületre, férőhelyre vagy felszereltségre (projektor, tábla stb.);
 - heti naptárnézetben láthatod, mikor szabad egy terem;
 - legfeljebb 3 órára foglalhatsz, és egyszerre legfeljebb 2 aktív foglalásod lehet;
@@ -65,7 +65,3 @@ A nem funkcionális követelményeket felosztottuk egymás között. Mindenki k�
 | Biztonság | NFR-03, NFR-04 |
 | Megbízhatóság | NFR-05, NFR-06 |
 | Használhatóság és hordozhatóság | NFR-07, NFR-08 |
-
----
-
-*Készült a Debreceni Egyetem egyik projektmunkájaként.*
