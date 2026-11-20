@@ -1,0 +1,1311 @@
+<meta charset="utf-8">
+<title>StudyRoom prototípus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Elrendezés: felül a prototípus vezérlősávja, alatta az alkalmazás fejléce és egy 1180 px-es tartalmi oszlop.
+   A terem oldalán heti naptár és foglalási panel két oszlopban, telefonon egymás alatt.
+   Színvilág: tintakék (a foglalás, a saját sáv) és szövegkiemelő-sárga (a kijelölt idősáv). */
+:root{
+  --bg:#eef2f5; --surface:#ffffff; --surface-2:#f5f7f9; --ink:#14202b; --muted:#566573; --line:#d5dde5;
+  --accent:#1d5b86; --accent-ink:#ffffff; --accent-soft:#e1edf6;
+  --hl:#f4d34a; --hl-ink:#2e2600; --hl-soft:#fdf3c4;
+  --busy:#e0e6ec; --busy-stripe:#cdd6df; --closed:#e7ebef;
+  --ok:#1f7a4a; --ok-soft:#e0f2e7; --warn:#935600; --warn-soft:#fbefdc; --err:#b42318; --err-soft:#fbe4e1;
+  --pbar-bg:#14202b; --pbar-fg:#dbe4ec; --pbar-muted:#93a3b2; --pbar-line:#33475a; --pbar-tag:#f4d34a;
+  --scrim:rgba(10,16,22,.55);
+  --shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px rgba(20,32,43,.08);
+  --f-display:'Bricolage Grotesque','Inter',system-ui,sans-serif;
+  --f-body:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:10px; --r-sm:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e151c; --surface:#16212b; --surface-2:#1b2733; --ink:#e4ebf1; --muted:#9aa9b7; --line:#2b3947;
+    --accent:#7db6df; --accent-ink:#0a1824; --accent-soft:#1c3346;
+    --hl:#e8c53a; --hl-ink:#1d1700; --hl-soft:#3a3214;
+    --busy:#24313d; --busy-stripe:#2e3c4a; --closed:#1a242e;
+    --ok:#5cc58c; --ok-soft:#163626; --warn:#e3a24c; --warn-soft:#3a2a12; --err:#f08a80; --err-soft:#3d1c19;
+    --pbar-bg:#05090d; --pbar-fg:#cfd9e2; --pbar-muted:#7f8f9e; --pbar-line:#22303d; --pbar-tag:#e8c53a;
+    --scrim:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e151c; --surface:#16212b; --surface-2:#1b2733; --ink:#e4ebf1; --muted:#9aa9b7; --line:#2b3947;
+  --accent:#7db6df; --accent-ink:#0a1824; --accent-soft:#1c3346;
+  --hl:#e8c53a; --hl-ink:#1d1700; --hl-soft:#3a3214;
+  --busy:#24313d; --busy-stripe:#2e3c4a; --closed:#1a242e;
+  --ok:#5cc58c; --ok-soft:#163626; --warn:#e3a24c; --warn-soft:#3a2a12; --err:#f08a80; --err-soft:#3d1c19;
+  --pbar-bg:#05090d; --pbar-fg:#cfd9e2; --pbar-muted:#7f8f9e; --pbar-line:#22303d; --pbar-tag:#e8c53a;
+  --scrim:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+/* Wireframe nézet: szürkeárnyalat, szaggatott körvonalak, képhelyőrzők */
+:root.wf{
+  --bg:#f3f3f3; --surface:#ffffff; --surface-2:#f3f3f3; --ink:#222222; --muted:#6b6b6b; --line:#a3a3a3;
+  --accent:#444444; --accent-ink:#ffffff; --accent-soft:#e6e6e6;
+  --hl:#c4c4c4; --hl-ink:#111111; --hl-soft:#ebebeb;
+  --busy:#dddddd; --busy-stripe:#cacaca; --closed:#ececec;
+  --ok:#333333; --ok-soft:#e6e6e6; --warn:#333333; --warn-soft:#e6e6e6; --err:#222222; --err-soft:#e0e0e0;
+  --pbar-tag:#ffffff; --shadow:none; --f-display:var(--f-body);
+}
+@media (prefers-color-scheme: dark){
+  :root.wf:not([data-theme="light"]){
+    --bg:#151515; --surface:#1e1e1e; --surface-2:#191919; --ink:#e6e6e6; --muted:#9b9b9b; --line:#5e5e5e;
+    --accent:#cfcfcf; --accent-ink:#111111; --accent-soft:#2c2c2c;
+    --hl:#6a6a6a; --hl-ink:#ffffff; --hl-soft:#2e2e2e;
+    --busy:#2e2e2e; --busy-stripe:#3a3a3a; --closed:#232323;
+    --ok:#dddddd; --ok-soft:#2c2c2c; --warn:#dddddd; --warn-soft:#2c2c2c; --err:#eeeeee; --err-soft:#2c2c2c;
+  }
+}
+:root.wf[data-theme="dark"]{
+  --bg:#151515; --surface:#1e1e1e; --surface-2:#191919; --ink:#e6e6e6; --muted:#9b9b9b; --line:#5e5e5e;
+  --accent:#cfcfcf; --accent-ink:#111111; --accent-soft:#2c2c2c;
+  --hl:#6a6a6a; --hl-ink:#ffffff; --hl-soft:#2e2e2e;
+  --busy:#2e2e2e; --busy-stripe:#3a3a3a; --closed:#232323;
+  --ok:#dddddd; --ok-soft:#2c2c2c; --warn:#dddddd; --warn-soft:#2c2c2c; --err:#eeeeee; --err-soft:#2c2c2c;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0;letter-spacing:-.01em;font-weight:700}
+h1{font-size:clamp(2.1rem,4.6vw,3.2rem)}
+.h-page{font-size:clamp(1.6rem,3vw,2.1rem)}
+h2{font-size:1.3rem} h3{font-size:1.05rem}
+.h-sm{font-size:1rem}
+p{margin:0}
+ul{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--muted)} .small{font-size:.85rem}
+.eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.stack{display:flex;flex-direction:column;gap:20px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.sec-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+.btn{font:inherit;font-weight:600;font-size:.92rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 14px;border-radius:var(--r-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.2;text-decoration:none;transition:background .15s,border-color .15s}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{background:var(--err);border-color:var(--err);color:var(--surface)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.lg{padding:12px 20px;font-size:1rem}
+.btn.sm{padding:5px 10px;font-size:.82rem}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.linkish{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.74rem;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+.chip.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.chip.err{background:var(--err-soft);border-color:transparent;color:var(--err)}
+.chip.accent{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.notice{padding:12px 14px;border-radius:var(--r-sm);border:1px solid var(--line);border-left-width:4px;font-size:.92rem;background:var(--surface-2)}
+.notice.ok{background:var(--ok-soft);border-color:var(--ok)}
+.notice.err{background:var(--err-soft);border-color:var(--err)}
+.notice.warn{background:var(--warn-soft);border-color:var(--warn)}
+.notice.info{background:var(--accent-soft);border-color:var(--accent)}
+.code{font-family:var(--f-mono);font-weight:500;font-size:.88rem;letter-spacing:.01em}
+.code.lg{font-size:1rem}
+
+/* Űrlapok */
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field>.lbl{font-weight:600;font-size:.88rem}
+.input{font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);color:var(--ink);width:100%}
+.input:focus{border-color:var(--accent)}
+.input.invalid{border-color:var(--err)}
+.err-text{color:var(--err);font-size:.85rem;font-weight:500}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;cursor:pointer}
+.check input{margin-top:3px;accent-color:var(--accent)}
+.pwrules{list-style:none;padding:0;display:flex;flex-direction:column;gap:2px;font-size:.84rem;color:var(--muted)}
+.pwrules li::before{content:"○ ";font-family:var(--f-mono)}
+.pwrules li.ok{color:var(--ok)}
+.pwrules li.ok::before{content:"● "}
+.form{display:flex;flex-direction:column;gap:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+
+/* Prototípus vezérlősáv */
+.pbar{background:var(--pbar-bg);color:var(--pbar-fg);font-size:.8rem}
+.pbar .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding-block:8px}
+.pbar-tag{font-family:var(--f-mono);font-weight:500;letter-spacing:.12em;color:var(--pbar-tag)}
+.pbar .grp{display:flex;gap:6px;align-items:center;color:var(--pbar-muted)}
+.pbar select{background:var(--pbar-bg);color:var(--pbar-fg);border:1px solid var(--pbar-line);border-radius:5px;padding:4px 6px;font:inherit;max-width:260px}
+.pbar input[type=checkbox]{accent-color:var(--pbar-tag)}
+.seg{display:inline-flex;border:1px solid var(--pbar-line);border-radius:5px;overflow:hidden}
+.seg button{background:transparent;color:var(--pbar-muted);border:0;padding:4px 9px;font:inherit;cursor:pointer}
+.seg button+button{border-left:1px solid var(--pbar-line)}
+.seg button[aria-pressed="true"]{background:var(--pbar-fg);color:var(--pbar-bg)}
+.pbar .val{font-family:var(--f-mono);color:var(--pbar-fg)}
+.pbar .pbtn{background:transparent;border:1px solid var(--pbar-line);color:var(--pbar-fg);border-radius:5px;padding:4px 9px;font:inherit;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.badge{background:var(--pbar-tag);color:var(--pbar-bg);border-radius:999px;padding:0 6px;font-family:var(--f-mono);font-size:.72rem;font-weight:500}
+.pbar .push{margin-left:auto}
+
+/* Fejléc */
+.hdr{background:var(--surface);border-bottom:1px solid var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:8px 20px;min-height:62px;flex-wrap:wrap;padding-block:8px}
+.logo{font-family:var(--f-display);font-weight:700;font-size:1.25rem;display:flex;align-items:center;gap:8px;color:var(--ink);background:none;border:0;cursor:pointer;padding:0;letter-spacing:-.02em}
+.logo svg{width:26px;height:26px}
+.logo .lm-frame{fill:none;stroke:var(--accent);stroke-width:2}
+.logo .lm-slot{fill:var(--hl)}
+.logo .lm-line{stroke:var(--accent);stroke-width:1.5;fill:none}
+.nav{display:flex;gap:2px;flex:1;min-width:0}
+.nav button{background:none;border:0;font:inherit;font-weight:500;color:var(--muted);padding:8px 11px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.nav button:hover{color:var(--ink)}
+.nav button[aria-current="page"]{color:var(--ink);background:var(--accent-soft)}
+.hdr-end{display:flex;gap:10px;align-items:center;margin-left:auto}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:.78rem;font-weight:600}
+.lang button{background:none;border:0;padding:4px 8px;font:inherit;color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.who{font-size:.85rem;color:var(--muted);text-align:right;line-height:1.25}
+.who b{color:var(--ink);font-weight:600;display:block}
+@media (max-width:760px){
+  .nav{order:3;flex-basis:100%;overflow-x:auto}
+  .who{display:none}
+}
+
+main{padding-block:28px 72px}
+
+/* Nyitóoldal */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:40px;align-items:center;padding-block:28px 36px}
+.hero-text{display:flex;flex-direction:column;gap:18px;min-width:0}
+.lead{font-size:1.12rem;color:var(--muted);max-width:50ch}
+.hero h1 .hl{background:linear-gradient(transparent 58%,var(--hl) 58%,var(--hl) 92%,transparent 92%);padding:0 .08em}
+@media (max-width:840px){.hero{grid-template-columns:1fr}}
+.now-list{list-style:none;padding:0;display:flex;flex-direction:column}
+.now-list li{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.now-list li:first-child{border-top:0}
+.now-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.step{display:flex;flex-direction:column;gap:6px}
+.step-n{font-family:var(--f-mono);font-size:.8rem;color:var(--accent);font-weight:500}
+@media (max-width:720px){.steps{grid-template-columns:1fr}}
+
+/* Bejelentkezés, regisztráció */
+.auth{max-width:470px;margin:8px auto 0;width:100%}
+.auth .card{padding:28px;display:flex;flex-direction:column;gap:18px}
+.demo-hint{font-size:.82rem;border:1px dashed var(--line);border-radius:var(--r-sm);padding:10px 12px;color:var(--muted)}
+
+/* Kezdőlap */
+.dash{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px}
+@media (max-width:820px){.dash{grid-template-columns:1fr}}
+.cta-card{display:flex;flex-direction:column;justify-content:space-between;gap:20px;background:var(--accent-soft);border-color:transparent}
+.cta-card h2{font-size:1.6rem}
+.mini{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.mini:first-of-type{border-top:0}
+
+/* Termek */
+.rooms-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:820px){.rooms-layout{grid-template-columns:1fr}}
+.filters{display:flex;flex-direction:column;gap:16px}
+.room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.room-card{display:flex;flex-direction:column;gap:8px;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s,box-shadow .15s;padding:16px}
+.room-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.room-card .rc-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.room-card .rc-title{font-family:var(--f-display);font-weight:700;font-size:1.08rem;line-height:1.2}
+.room-card .rc-meta{color:var(--muted);font-size:.85rem}
+.empty{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding:40px 20px}
+
+/* Alaprajz */
+.fp-box{display:block;background:var(--surface-2);border-radius:8px;aspect-ratio:3/2;max-width:100%;overflow:hidden}
+.fp-box svg{display:block;width:100%;height:100%}
+.fp-wall{fill:none;stroke:var(--muted);stroke-width:2}
+.fp-table{fill:var(--surface);stroke:var(--line);stroke-width:1}
+.fp-seat{fill:var(--accent)}
+.fp-board{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.fp-screen{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:3 2}
+.fp-tv{fill:var(--ink)}
+.fp-label{fill:var(--muted);font-family:var(--f-mono);font-size:6px}
+.wf .fp-box{background:linear-gradient(to top right,transparent calc(50% - 1px),var(--line) 50%,transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),var(--line) 50%,transparent calc(50% + 1px)),var(--surface-2);border:1px dashed var(--line)}
+.wf .fp-box svg{visibility:hidden}
+
+/* Terem oldal */
+.room-head{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;align-items:center}
+.room-head .info{display:flex;flex-direction:column;gap:8px;min-width:0}
+@media (max-width:640px){.room-head{grid-template-columns:1fr}.room-head .fp-box{max-width:260px}}
+.room-body{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:960px){.room-body{grid-template-columns:1fr}}
+.cal-card{padding:16px}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.cal-nav .wk{font-weight:600}
+.cal-wrap{overflow-x:auto;padding-bottom:4px}
+.cal{display:grid;grid-template-columns:44px repeat(7,minmax(72px,1fr));grid-template-rows:46px repeat(24,21px);column-gap:4px;min-width:580px}
+.cal-dh{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.74rem;color:var(--muted);line-height:1.15;gap:2px}
+.cal-dh b{font-family:var(--f-mono);font-size:.95rem;color:var(--ink);font-weight:500;padding:1px 7px;border-radius:999px}
+.cal-dh.today b{background:var(--accent);color:var(--accent-ink)}
+.cal-t{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);transform:translateY(-8px);text-align:right;padding-right:6px}
+.cell{display:block;border:0;margin:0;padding:0;width:100%;height:100%;font:inherit;text-align:left;border-top:1px solid var(--line);background:transparent;color:var(--muted);overflow:hidden}
+.cell.hh{border-top-style:dotted}
+.cell.free{background:var(--surface);cursor:pointer}
+.cell.free:hover{background:var(--hl-soft)}
+.cell.off{background:var(--closed);border-top-color:transparent}
+.cell.past{background:var(--surface-2);opacity:.7}
+.cell.busy{background:repeating-linear-gradient(135deg,var(--busy) 0 5px,var(--busy-stripe) 5px 10px);border-top-color:transparent}
+.cell.mine{background:var(--accent);border-top-color:transparent}
+.cell.bs{border-top-left-radius:5px;border-top-right-radius:5px}
+.cell.be{border-bottom-left-radius:5px;border-bottom-right-radius:5px}
+.cell span{display:block;font-size:.66rem;font-weight:600;padding:3px 5px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+.cell.mine span{color:var(--accent-ink)}
+.cell.sel{background:var(--hl);border-top-color:transparent;color:var(--hl-ink)}
+.cell.sel.err{background:var(--err-soft);color:var(--err)}
+.cell.clash{box-shadow:inset 0 0 0 2px var(--err)}
+.cal-closed{display:flex;align-items:center;justify-content:center;border-radius:6px;background:repeating-linear-gradient(135deg,var(--closed) 0 8px,var(--surface-2) 8px 16px)}
+.cal-closed span{font-size:.78rem;font-weight:600;color:var(--muted);background:var(--surface);padding:2px 8px;border-radius:999px;border:1px solid var(--line)}
+.nowline{height:2px;background:var(--err);pointer-events:none;align-self:start;z-index:2;position:relative}
+.nowline::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--err)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--muted);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:12px;border-radius:3px;border:1px solid var(--line);display:inline-block}
+.sw.free{background:var(--surface)}
+.sw.busy{background:repeating-linear-gradient(135deg,var(--busy) 0 3px,var(--busy-stripe) 3px 6px);border-color:transparent}
+.sw.mine{background:var(--accent);border-color:transparent}
+.sw.sel{background:var(--hl);border-color:transparent}
+.sw.off{background:var(--closed)}
+.panel{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}
+@media (max-width:960px){.panel{position:static}}
+.range{font-family:var(--f-mono);font-size:1.5rem;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.errs{padding-left:18px;color:var(--err);font-size:.88rem;display:flex;flex-direction:column;gap:4px}
+.quota{display:flex;align-items:center;gap:8px;font-size:.84rem;color:var(--muted)}
+.quota i{display:inline-block;width:18px;height:8px;border-radius:2px;background:var(--surface-2);border:1px solid var(--line)}
+.quota i.on{background:var(--accent);border-color:var(--accent)}
+
+/* Foglalásaim */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.blist{display:flex;flex-direction:column;gap:10px}
+.brow{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 16px}
+.datebox{text-align:center;border:1px solid var(--line);border-radius:8px;padding:6px 0;background:var(--surface-2);line-height:1.1}
+.datebox b{display:block;font-family:var(--f-mono);font-size:1.35rem;font-weight:500}
+.datebox span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.brow .bt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.brow .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:560px){.brow{grid-template-columns:56px minmax(0,1fr)}.brow .acts{grid-column:1 / -1;justify-content:flex-start}}
+
+/* Profil */
+.prof{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:820px){.prof{grid-template-columns:1fr}}
+.kv{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px 12px;margin:0}
+.kv dt{color:var(--muted);font-size:.86rem}
+.kv dd{margin:0;overflow-wrap:anywhere}
+.switch{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.switch input{position:absolute;opacity:0;width:1px;height:1px}
+.switch .track{flex:none;width:40px;height:22px;border-radius:999px;background:var(--line);position:relative;transition:background .15s;margin-top:1px}
+.switch .track::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:transform .15s}
+.switch input:checked+.track{background:var(--accent)}
+.switch input:checked+.track::after{transform:translateX(18px)}
+.switch input:focus-visible+.track{outline:3px solid var(--hl);outline-offset:2px}
+
+/* Admin */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px;font-size:.92rem}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
+td.num{font-variant-numeric:tabular-nums}
+tr.inactive td{color:var(--muted)}
+.room-form{display:flex;flex-direction:column;gap:16px}
+.eq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{display:flex;flex-direction:column;gap:4px;padding:16px}
+.kpi b{font-family:var(--f-mono);font-size:1.6rem;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .small{overflow-wrap:anywhere}
+.period{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.period .field{min-width:150px}
+.pseg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.pseg button{background:var(--surface);border:0;padding:9px 12px;font:inherit;font-size:.88rem;font-weight:600;color:var(--muted);cursor:pointer}
+.pseg button+button{border-left:1px solid var(--line)}
+.pseg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.bars{display:flex;flex-direction:column;gap:12px}
+.bar-row{display:grid;grid-template-columns:220px minmax(0,1fr) 150px;gap:14px;align-items:center}
+.bar-name{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.bar-name span{font-size:.82rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:16px;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;overflow:hidden;position:relative;background-image:linear-gradient(to right,transparent calc(25% - 1px),var(--line) 25%,transparent calc(25% + 1px),transparent calc(50% - 1px),var(--line) 50%,transparent calc(50% + 1px),transparent calc(75% - 1px),var(--line) 75%,transparent calc(75% + 1px))}
+.bar-fill{height:100%;background:var(--accent);border-radius:0 3px 3px 0}
+.bar-fill.hot{background:var(--warn)}
+.bar-val{display:flex;flex-direction:column;align-items:flex-end;line-height:1.25}
+.bar-val b{font-family:var(--f-mono);font-weight:500;font-variant-numeric:tabular-nums}
+.bar-val span{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.axis{display:grid;grid-template-columns:220px minmax(0,1fr) 150px;gap:14px;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.axis div{display:flex;justify-content:space-between}
+@media (max-width:640px){.bar-row{grid-template-columns:minmax(0,1fr) auto}.bar-track{grid-column:1 / -1;order:3}.axis{display:none}}
+
+/* 403 */
+.forbidden{max-width:560px;margin:24px auto;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.forbidden .big{font-family:var(--f-mono);font-size:4rem;font-weight:500;color:var(--muted);line-height:1}
+
+/* Párbeszédablak, postafiók, értesítések */
+.modal-bg{position:fixed;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal{background:var(--surface);color:var(--ink);border-radius:12px;max-width:500px;width:100%;padding:24px;max-height:calc(100% - 32px);overflow:auto;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:16px;border:1px solid var(--line)}
+.modal .tag{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.sum{display:grid;grid-template-columns:105px minmax(0,1fr);gap:8px 12px;margin:0}
+.sum dt{color:var(--muted);font-size:.86rem}
+.sum dd{margin:0}
+.actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.csv{width:100%;min-height:180px;font-family:var(--f-mono);font-size:.78rem;padding:10px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2);color:var(--ink);resize:vertical;white-space:pre;overflow:auto}
+.mail{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:60;display:flex;flex-direction:column;gap:12px;overflow:auto;box-shadow:var(--shadow);padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) 16px}
+.mail-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mail-item{border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+.mail-item .to{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);overflow-wrap:anywhere}
+.mail-item p{white-space:pre-line;color:var(--muted)}
+.mail-sched{font-size:.84rem;display:flex;flex-direction:column;gap:4px;border:1px dashed var(--line);border-radius:8px;padding:10px 12px}
+.toasts{position:fixed;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:8px;z-index:70;pointer-events:none;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.toast{background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-size:.9rem;max-width:520px;box-shadow:var(--shadow);animation:tin .2s ease-out}
+.toast.err{background:var(--err);color:var(--surface)}
+.toast.ok{background:var(--ok);color:var(--surface)}
+@keyframes tin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+
+/* Wireframe: szaggatott körvonalak, egyszerűbb felületek */
+.wf .card,.wf .btn,.wf .input,.wf .chip,.wf .notice,.wf .datebox,.wf .bar-track,.wf .lang,.wf .pseg{border-style:dashed}
+.wf .cta-card{border:1px dashed var(--line)}
+.wf .hero h1 .hl{background:none;text-decoration:underline;text-decoration-thickness:3px}
+.wf .cell.busy,.wf .sw.busy{background:var(--busy)}
+.wf .cal-closed{background:var(--closed)}
+</style>
+
+<div class="pbar" id="pbar"></div>
+<header class="hdr" id="hdr"></header>
+<main id="app"></main>
+<div id="modal-root"></div>
+<aside class="mail" id="mail" hidden aria-label="Kimenő e-mailek"></aside>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+/* ---------- Időkezelés (szimulált idő: 2027. január 12., kedd 9:40, Europe/Budapest) ---------- */
+const NOW_DAY = '2027-01-12', NOW_MIN = 9*60 + 40;
+const DAYS = ['vasárnap','hétfő','kedd','szerda','csütörtök','péntek','szombat'];
+const DSHORT = ['V','H','K','Sze','Cs','P','Szo'];
+const MONTHS = ['jan.','febr.','márc.','ápr.','máj.','jún.','júl.','aug.','szept.','okt.','nov.','dec.'];
+const pad = n => String(n).padStart(2,'0');
+const dk = (y,m,d) => `${y}-${pad(m)}-${pad(d)}`;
+const parse = k => { const [y,m,d] = k.split('-').map(Number); return {y,m,d}; };
+const dnum = k => { const p = parse(k); return Date.UTC(p.y,p.m-1,p.d)/864e5; };
+const fromNum = n => { const t = new Date(n*864e5); return dk(t.getUTCFullYear(), t.getUTCMonth()+1, t.getUTCDate()); };
+const addDays = (k,n) => fromNum(dnum(k)+n);
+const wday = k => new Date(dnum(k)*864e5).getUTCDay();
+const mondayOf = k => addDays(k, -((wday(k)+6)%7));
+const fmtDate = k => { const p = parse(k); return `${p.y}. ${MONTHS[p.m-1]} ${p.d}., ${DAYS[wday(k)]}`; };
+const fmtShort = k => { const p = parse(k); return `${MONTHS[p.m-1]} ${p.d}.`; };
+const fmtT = m => `${Math.floor(m/60)}:${pad(m%60)}`;
+const abs = (k,m) => dnum(k)*1440 + m;
+const NOW_ABS = abs(NOW_DAY, NOW_MIN);
+const durLabel = m => m < 60 ? `${m} perc` : (m % 60 ? `${Math.floor(m/60)},5 óra` : `${m/60} óra`);
+function isoWeek(k){
+  const thu = dnum(k) - ((wday(k)+6)%7) + 3;
+  const y = parse(fromNum(thu)).y, j4 = dk(y,1,4);
+  const w1 = dnum(j4) - ((wday(j4)+6)%7);
+  return 1 + Math.floor((thu - 3 - w1)/7);
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = s => document.querySelector(s);
+const art = code => /^[aeiouáéíóöőúüű]/i.test(code) ? 'Az' : 'A';
+
+/* ---------- Mintaadatok ---------- */
+const EQ = {projektor:'Projektor', tabla:'Tábla', tv:'TV-képernyő', konnektor:'Konnektor az asztaloknál', akadalymentes:'Akadálymentes'};
+const BUILDINGS = ['A épület','B épület','Könyvtár'];
+const RKA = 'kovacs.reka@student.nye.hu', ADM = 'admin@nye.hu';
+
+const S = {
+  route: 'nyito', current: null, last: null,
+  me: null, wf: false, simConflict: false,
+  clicks: 0, clicksValid: false,
+  accounts: {
+    [RKA]: {name:'Kovács Réka', pw:'tanulas2027', role:'student', confirmed:true, reminders:true},
+    [ADM]: {name:'Szabó Márta', pw:'admin2027', role:'admin', confirmed:true, reminders:false},
+  },
+  rooms: [
+    {id:1, code:'A/104', name:'Csendes tanulószoba', building:'A épület', floor:'1. emelet', cap:12, eq:['tabla','konnektor'], open:480, close:1200, sat:false, active:true},
+    {id:2, code:'A/210', name:'Csoportszoba', building:'A épület', floor:'2. emelet', cap:6, eq:['tabla','tv'], open:480, close:1200, sat:false, active:true},
+    {id:3, code:'A/015', name:'Projektoros terem', building:'A épület', floor:'földszint', cap:20, eq:['projektor','tabla','akadalymentes'], open:480, close:1200, sat:false, active:true},
+    {id:4, code:'B/112', name:'Kis csoportszoba', building:'B épület', floor:'1. emelet', cap:4, eq:['tabla'], open:480, close:1080, sat:false, active:true},
+    {id:5, code:'B/305', name:'Szemináriumi szoba', building:'B épület', floor:'3. emelet', cap:16, eq:['projektor','konnektor','akadalymentes'], open:480, close:1200, sat:false, active:true},
+    {id:6, code:'KT-2.1', name:'Könyvtári csoportszoba', building:'Könyvtár', floor:'2. emelet', cap:8, eq:['tv','konnektor','akadalymentes'], open:480, close:1200, sat:true, active:true},
+    {id:7, code:'KT-2.4', name:'Csendes fülke', building:'Könyvtár', floor:'2. emelet', cap:2, eq:['konnektor'], open:480, close:1200, sat:true, active:true},
+    {id:8, code:'B/020', name:'Régi számítógépterem', building:'B épület', floor:'földszint', cap:10, eq:['tabla'], open:480, close:1080, sat:false, active:false, seedInactive:true},
+  ],
+  bookings: [],
+  cancelled: {},
+  filters: {building:'', minCap:'', eq:[]},
+  weekOffset: 0, sel: null, roomNotice: null,
+  tab: 'kozelgo', modal: null, mailOpen: false, mails: [],
+  regForm: null, regErrs: {}, pending: null,
+  loginErr: null, fails: 0, locked: false, prefillEmail: '', flash: null,
+  editRoom: null,
+  stats: {preset:'prevweek', from:'2027-01-04', to:'2027-01-10'},
+  seq: 0,
+};
+const SEED_OWN = [
+  {id:'m1', roomId:1, day:'2027-01-12', start:630, end:720, user:RKA, status:'active', late:false},
+  {id:'m2', roomId:2, day:'2027-01-08', start:840, end:960, user:RKA, status:'active', late:false},
+  {id:'m3', roomId:5, day:'2027-01-05', start:600, end:690, user:RKA, status:'cancelled', late:true},
+  {id:'m4', roomId:7, day:'2026-12-17', start:540, end:720, user:RKA, status:'active', late:false},
+  {id:'m5', roomId:3, day:'2026-12-02', start:780, end:900, user:RKA, status:'active', late:false},
+];
+S.bookings = SEED_OWN.map(b => ({...b}));
+
+/* Más hallgatók foglalásai: determinisztikus álvéletlen generálás teremre és napra */
+function hash(s){ let h = 2166136261; for (const c of s){ h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(a){ return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const roomById = id => S.rooms.find(r => r.id === id);
+function hoursFor(r,k){ const w = wday(k); if (w === 0) return null; if (w === 6) return r.sat ? [540,840] : null; return [r.open, r.close]; }
+const genCache = {};
+function generated(r,k){
+  const key = r.id + '|' + k;
+  if (genCache[key]) return genCache[key];
+  const out = [], h = hoursFor(r,k);
+  if (h && !r.seedInactive){
+    const rnd = rng(hash(key)), gaps = [0,0,30,60,90,120,180], lens = [60,90,120,120,180];
+    let t = h[0], i = 0;
+    while (true){
+      t += gaps[Math.floor(rnd()*gaps.length)];
+      const len = lens[Math.floor(rnd()*lens.length)];
+      if (t + len > h[1]) break;
+      out.push({id:`g-${r.id}-${k}-${i++}`, roomId:r.id, day:k, start:t, end:t+len, user:'other', status:'active', late:false});
+      t += len;
+    }
+  }
+  return genCache[key] = out.filter(b => !SEED_OWN.some(o => o.roomId === b.roomId && o.day === b.day && o.start < b.end && b.start < o.end));
+}
+function bookingsFor(roomId,k){
+  const r = roomById(roomId); if (!r) return [];
+  const gen = r.custom ? [] : generated(r,k).map(b => S.cancelled[b.id] ? {...b, status:'cancelled'} : b);
+  return gen.concat(S.bookings.filter(b => b.roomId === roomId && b.day === k));
+}
+const activeFor = (roomId,k) => bookingsFor(roomId,k).filter(b => b.status === 'active');
+const activeRooms = () => S.rooms.filter(r => r.active);
+const user = () => S.accounts[S.me];
+const roleOf = () => S.me && S.accounts[S.me] ? S.accounts[S.me].role : 'guest';
+const mine = () => S.bookings.filter(b => b.user === S.me);
+const activeFuture = () => mine().filter(b => b.status === 'active' && abs(b.day,b.start) > NOW_ABS);
+const upcoming = () => mine().filter(b => b.status === 'active' && abs(b.day,b.end) > NOW_ABS).sort((a,b) => abs(a.day,a.start) - abs(b.day,b.start));
+
+function nowStatus(r){
+  const h = hoursFor(r, NOW_DAY);
+  if (!h || NOW_MIN < h[0] || NOW_MIN >= h[1]) return {free:false, text:'Most zárva'};
+  const bs = activeFor(r.id, NOW_DAY).sort((a,b) => a.start - b.start);
+  const cur = bs.find(b => b.start <= NOW_MIN && NOW_MIN < b.end);
+  if (cur){
+    let end = cur.end, moved = true;
+    while (moved){ moved = false; for (const b of bs) if (b.start === end){ end = b.end; moved = true; } }
+    return {free:false, text:`Foglalt ${fmtT(end)}-ig`};
+  }
+  const next = bs.find(b => b.start > NOW_MIN);
+  return {free:true, text: next ? `Szabad ${fmtT(next.start)}-ig` : 'Szabad zárásig'};
+}
+const freeNow = () => activeRooms().filter(r => nowStatus(r).free);
+
+function checkSel(s){
+  const r = roomById(s.roomId), h = hoursFor(r, s.day), end = s.start + s.dur, errs = [];
+  if (s.dur > 180) errs.push('A maximális foglalási idő 3 óra. Válassz rövidebb időtartamot.');
+  if (!h) errs.push('A terem ezen a napon zárva tart.');
+  else if (s.start < h[0] || end > h[1]) errs.push(`A terem ${fmtT(h[1])}-kor zár, a foglalásnak addig véget kell érnie.`);
+  if (abs(s.day, s.start) < NOW_ABS) errs.push('Elmúlt időpontra nem lehet foglalni.');
+  const clash = activeFor(s.roomId, s.day).find(b => b.start < end && s.start < b.end);
+  if (clash) errs.push(`Ütközik egy meglévő foglalással (${fmtT(clash.start)}–${fmtT(clash.end)}).`);
+  return errs;
+}
+
+function mail(to, subject, body, action){ S.mails.unshift({id: ++S.seq, to, subject, body, action}); }
+function toast(text, kind = ''){
+  const el = document.createElement('div');
+  el.className = 'toast ' + kind; el.textContent = text;
+  $('#toasts').appendChild(el);
+  setTimeout(() => el.remove(), 4200);
+}
+
+/* ---------- Alaprajz-illusztráció (SVG) ---------- */
+function floorplan(r){
+  const cap = Math.min(r.cap, 20), cols = Math.min(6, Math.ceil(cap/2)), pairs = Math.ceil(cap/(cols*2));
+  const bandH = 50 / pairs; let seats = '', tables = '', n = 0;
+  for (let p = 0; p < pairs; p++){
+    const cy = 16 + bandH*(p + .5), x0 = 60 - cols*7;
+    tables += `<rect class="fp-table" x="${x0}" y="${cy-4}" width="${cols*14}" height="8" rx="1.5"/>`;
+    for (const dy of [-9, 9]) for (let i = 0; i < cols && n < cap; i++, n++)
+      seats += `<circle class="fp-seat" cx="${x0 + 7 + i*14}" cy="${cy+dy}" r="2.8"/>`;
+  }
+  const board = r.eq.includes('tabla') ? '<line class="fp-board" x1="7" y1="26" x2="7" y2="54"/>' : '';
+  const screen = r.eq.includes('projektor') ? '<line class="fp-screen" x1="40" y1="8" x2="80" y2="8"/>' : '';
+  const tv = r.eq.includes('tv') ? '<rect class="fp-tv" x="110" y="32" width="3" height="16" rx="1"/>' : '';
+  return `<svg viewBox="0 0 120 80" role="img" aria-label="${esc(r.code)} alaprajza, ${r.cap} férőhely"><path class="fp-wall" d="M90 76 H4 V4 H116 V76 H104"/>${board}${screen}${tv}${tables}${seats}<text class="fp-label" x="92" y="72">ajtó</text></svg>`;
+}
+
+/* ---------- Útvonalak ---------- */
+const ROUTES = {
+  'nyito':{role:'guest', id:'K-01'}, 'regisztracio':{role:'guest', id:'K-02'}, 'regisztracio-kesz':{role:'guest', id:'K-03'},
+  'belepes':{role:'guest', id:'K-04'}, 'kezdolap':{role:'student', id:'K-05'}, 'termek':{role:'student', id:'K-06'},
+  'terem':{role:'student', id:'K-07'}, 'foglalasaim':{role:'student', id:'K-09'}, 'profil':{role:'student', id:'K-11'},
+  'foglalas-mas':{role:'student', id:'K-15'}, 'admin-termek':{role:'admin', id:'K-12'}, 'admin-statisztika':{role:'admin', id:'K-14'},
+  'tiltott':{role:'any', id:'K-15'},
+};
+const home = () => ({guest:'nyito', student:'kezdolap', admin:'admin-termek'})[roleOf()];
+function resolve(){
+  let route = S.route || 'nyito', screen = route, param = null;
+  if (route.startsWith('terem-')){ screen = 'terem'; param = Number(route.slice(6)); }
+  if (!ROUTES[screen]) screen = home();
+  const need = ROUTES[screen].role, role = roleOf();
+  if (need === 'guest' && role !== 'guest') screen = home();
+  else if (need === 'student'){
+    if (role === 'guest'){ screen = 'belepes'; S.flash = 'Ehhez az oldalhoz be kell jelentkezned.'; }
+    else if (role === 'admin') screen = 'admin-termek';
+  } else if (need === 'admin'){
+    if (role === 'guest'){ screen = 'belepes'; S.flash = 'Ehhez az oldalhoz be kell jelentkezned.'; }
+    else if (role === 'student'){ screen = 'tiltott'; param = 'admin'; }
+  }
+  if (screen === 'foglalas-mas'){ screen = 'tiltott'; param = 'booking'; }
+  return {screen, param};
+}
+function go(to){
+  S.route = to;
+  try { history.replaceState(null, '', '#' + to); } catch (e) {}
+  render();
+}
+function setRole(r){
+  if (r === 'student' && S.accounts[RKA].deleted) delete S.accounts[RKA].deleted;
+  S.me = r === 'guest' ? null : r === 'student' ? RKA : ADM;
+  S.modal = null; S.sel = null; S.roomNotice = null; S.editRoom = null;
+}
+
+/* ---------- Prototípus-sáv és fejléc ---------- */
+const JUMPS = [
+  ['nyito','K-01 Nyitóoldal','guest'],
+  ['regisztracio','K-02 Regisztráció','guest'],
+  ['regisztracio-kesz','K-03 Regisztráció visszaigazolása','guest'],
+  ['belepes','K-04 Bejelentkezés','guest'],
+  ['kezdolap','K-05 Kezdőlap','student'],
+  ['termek','K-06 Termek','student'],
+  ['terem-1','K-07 Terem részletei (A/104)','student'],
+  ['terem-1','K-08 Foglalás megerősítése','student','k08'],
+  ['foglalasaim','K-09 Foglalásaim','student'],
+  ['foglalasaim','K-10 Lemondás megerősítése','student','k10'],
+  ['profil','K-11 Profil és beállítások','student'],
+  ['admin-termek','K-12 Termek kezelése','admin'],
+  ['admin-termek','K-13 Terem inaktiválása','admin','k13'],
+  ['admin-statisztika','K-14 Statisztikák','admin'],
+  ['admin-termek','K-15 403 – hallgató az admin oldalon','student'],
+  ['foglalas-mas','K-15 403 – más foglalásának lemondása','student'],
+];
+function currentJump(){
+  const id = S.modal && S.modal.type === 'confirm' ? 'K-08' : S.modal && S.modal.type === 'cancel' ? 'K-10' : S.modal && S.modal.type === 'inactivate' ? 'K-13' : (ROUTES[S.current] || {}).id;
+  return id;
+}
+function renderBar(){
+  const role = roleOf(), cur = currentJump();
+  let selIdx = JUMPS.findIndex(j => j[1].startsWith(cur) && (cur !== 'K-15' || (S.lastParam === 'booking') === (j[0] === 'foglalas-mas')));
+  return `<div class="wrap">
+    <span class="pbar-tag">PROTOTÍPUS</span>
+    <span class="grp">Szimulált idő: <span class="val">2027. jan. 12., kedd 9:40</span></span>
+    <label class="grp" for="pb-screen">Képernyő
+      <select id="pb-screen" data-change="jump">${JUMPS.map((j,i) => `<option value="${i}" ${i === selIdx ? 'selected' : ''}>${j[1]}</option>`).join('')}</select>
+    </label>
+    <span class="grp">Szerepkör
+      <span class="seg" role="group" aria-label="Szerepkör">${[['guest','Vendég'],['student','Hallgató'],['admin','Admin']].map(([v,l]) => `<button data-action="role" data-v="${v}" aria-pressed="${role === v}">${l}</button>`).join('')}</span>
+    </span>
+    <span class="grp">Nézet
+      <span class="seg" role="group" aria-label="Nézet"><button data-action="wf" data-v="0" aria-pressed="${!S.wf}">Mockup</button><button data-action="wf" data-v="1" aria-pressed="${S.wf}">Wireframe</button></span>
+    </span>
+    <label class="grp" title="AC-05.2: a következő megerősítéskor valaki más pillanatokkal korábban lefoglalja ugyanazt a sávot"><input type="checkbox" id="pb-conflict" data-change="conflict" ${S.simConflict ? 'checked' : ''}> Ütközés a következő foglaláskor</label>
+    <span class="grp" title="NFR-07: legfeljebb 5 kattintás a kezdőlaptól a foglalásig">Kattintás a kezdőlap óta: <span class="val" id="pb-clicks">${S.clicksValid ? S.clicks : '–'}</span></span>
+    <button class="pbtn push" data-action="mailOpen">Kimenő e-mailek <span class="badge">${S.mails.length}</span></button>
+  </div>`;
+}
+const NAV = {
+  guest: [['belepes','Bejelentkezés'],['regisztracio','Regisztráció']],
+  student: [['kezdolap','Kezdőlap'],['termek','Termek'],['foglalasaim','Foglalásaim'],['profil','Profil']],
+  admin: [['admin-termek','Termek kezelése'],['admin-statisztika','Statisztikák']],
+};
+function renderHeader(){
+  const role = roleOf(), cur = S.current === 'terem' ? 'termek' : S.current;
+  const u = user();
+  return `<div class="wrap">
+    <button class="logo" data-action="go" data-to="${home()}" aria-label="StudyRoom kezdőoldal">
+      <svg viewBox="0 0 26 26" aria-hidden="true"><rect class="lm-frame" x="2" y="2" width="22" height="22" rx="5"/><line class="lm-line" x1="2" y1="9" x2="24" y2="9"/><rect class="lm-slot" x="7" y="12" width="12" height="7" rx="1.5"/></svg>
+      StudyRoom
+    </button>
+    <nav class="nav" aria-label="Fő menü">${NAV[role].map(([to,l]) => `<button data-action="go" data-to="${to}" ${cur === to ? 'aria-current="page"' : ''}>${l}</button>`).join('')}</nav>
+    <div class="hdr-end">
+      <span class="lang" role="group" aria-label="Nyelv"><button aria-pressed="true">HU</button><button data-action="lang" aria-pressed="false">EN</button></span>
+      ${u ? `<span class="who"><b>${esc(u.name)}</b>${role === 'admin' ? 'Adminisztrátor' : 'Hallgató'}</span><button class="btn sm" data-action="logout">Kijelentkezés</button>` : ''}
+    </div>
+  </div>`;
+}
+
+/* ---------- Képernyők ---------- */
+const SCREENS = {};
+
+SCREENS.nyito = () => {
+  const free = freeNow().slice(0, 4);
+  return `<div class="wrap stack">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Tanulószoba-foglalás a campuson</p>
+        <h1>Szabad terem, <span class="hl">végigjárás nélkül.</span></h1>
+        <p class="lead">Nézd meg előre, melyik tanulószoba mikor szabad, és foglald le magadnak legfeljebb 3 órára. Vizsgaidőszakban is.</p>
+        <div class="row"><button class="btn primary lg" data-action="go" data-to="regisztracio">Regisztráció</button><button class="btn lg" data-action="go" data-to="belepes">Bejelentkezés</button></div>
+        <p class="muted small">Egyetemi e-mail-címmel regisztrálhatsz (<span class="mono">@*.nye.hu</span>).</p>
+      </div>
+      <div class="card">
+        <div class="now-head"><span class="eyebrow">Most szabad</span><span class="mono small muted">kedd 9:40</span></div>
+        <ul class="now-list">${free.map(r => `<li><span class="code">${esc(r.code)}</span><span>${esc(r.name)}<br><span class="muted small">${esc(r.building)} · ${r.cap} fő</span></span><span class="chip ok">${nowStatus(r).text}</span></li>`).join('')}</ul>
+        <p class="muted small" style="margin-top:8px">A foglaláshoz jelentkezz be.</p>
+      </div>
+    </section>
+    <section class="steps">
+      <div class="card step"><span class="step-n">1.</span><h3>Keress termet</h3><p class="muted">Szűrj épületre, férőhelyre és felszereltségre, például projektorra vagy táblára.</p></div>
+      <div class="card step"><span class="step-n">2.</span><h3>Válassz idősávot</h3><p class="muted">A heti naptárban látod, mikor szabad a terem. Egy kattintás, és ki is jelölted.</p></div>
+      <div class="card step"><span class="step-n">3.</span><h3>Foglald le</h3><p class="muted">Visszaigazoló e-mailt kapsz, a kezdés előtt 30 perccel pedig emlékeztetőt.</p></div>
+    </section>
+  </div>`;
+};
+
+function pwRules(pw){ return [['len','Legalább 10 karakter', pw.length >= 10], ['let','Tartalmaz betűt', /\p{L}/u.test(pw)], ['dig','Tartalmaz számjegyet', /\d/.test(pw)]]; }
+SCREENS.regisztracio = () => {
+  const v = S.regForm || {name:'', email:'', pw:'', pw2:'', gdpr:false}, e = S.regErrs;
+  const fe = (k) => e[k] ? `<span class="err-text" id="${k}-err">${e[k]}</span>` : '';
+  const inv = k => e[k] ? 'invalid" aria-invalid="true" aria-describedby="' + k + '-err' : '';
+  return `<div class="wrap"><div class="auth"><div class="card">
+    <div><h1 class="h-page">Regisztráció</h1><p class="muted">Hozd létre a fiókodat az egyetemi e-mail-címeddel.</p></div>
+    <form class="form" data-form="reg" novalidate>
+      <div class="field"><label for="reg-name">Teljes név</label><input class="input ${inv('name')}" id="reg-name" name="reg-name" autocomplete="name" value="${esc(v.name)}">${fe('name')}</div>
+      <div class="field"><label for="reg-email">Egyetemi e-mail-cím</label><input class="input ${inv('email')}" id="reg-email" name="reg-email" type="email" autocomplete="email" placeholder="nev@student.nye.hu" value="${esc(v.email)}">${fe('email')}
+        ${e.exists ? `<div class="notice warn small">Ezzel az e-mail-címmel már van fiók. <button type="button" class="linkish" data-action="resetPw" data-email="${esc(v.email)}">Jelszó-visszaállító e-mail küldése</button></div>` : ''}</div>
+      <div class="field"><label for="reg-pw">Jelszó</label><input class="input ${inv('pw')}" id="reg-pw" name="reg-pw" type="password" autocomplete="new-password" data-input="pw" value="${esc(v.pw)}">
+        <ul class="pwrules" id="pwrules">${pwRules(v.pw).map(([k,l,ok]) => `<li class="${ok ? 'ok' : ''}">${l}</li>`).join('')}</ul>${fe('pw')}</div>
+      <div class="field"><label for="reg-pw2">Jelszó még egyszer</label><input class="input ${inv('pw2')}" id="reg-pw2" name="reg-pw2" type="password" autocomplete="new-password" value="${esc(v.pw2)}">${fe('pw2')}</div>
+      <label class="check"><input type="checkbox" id="reg-gdpr" name="reg-gdpr" ${v.gdpr ? 'checked' : ''}> <span>Elolvastam és elfogadom az adatkezelési tájékoztatót. Csak a nevemet, az e-mail-címemet és a foglalásaimat tároljátok.</span></label>${fe('gdpr')}
+      <button class="btn primary lg block" type="submit">Fiók létrehozása</button>
+    </form>
+    <p class="small muted">Van már fiókod? <button class="linkish" data-action="go" data-to="belepes">Bejelentkezés</button></p>
+    <div class="demo-hint">Kipróbálható hibaágak: nem egyetemi cím (pl. <span class="mono">nev@gmail.com</span>), már létező cím (<span class="mono">${RKA}</span>), gyenge jelszó.</div>
+  </div></div></div>`;
+};
+
+SCREENS['regisztracio-kesz'] = () => {
+  const email = S.pending || 'nev@student.nye.hu';
+  return `<div class="wrap"><div class="auth"><div class="card">
+    <p class="eyebrow">Már csak egy lépés</p>
+    <h1 class="h-page">Nézd meg a postafiókodat</h1>
+    <p>Megerősítő e-mailt küldtünk a <b class="mono">${esc(email)}</b> címre. Kattints a levélben lévő linkre, és utána bejelentkezhetsz.</p>
+    <div class="row"><button class="btn primary" data-action="mailOpen">Kimenő e-mailek megnyitása</button><button class="btn" data-action="resend">E-mail újraküldése</button></div>
+    <p class="small muted">A prototípusban a levél a „Kimenő e-mailek” panelen jelenik meg, a megerősítő link ott kattintható.</p>
+  </div></div></div>`;
+};
+
+SCREENS.belepes = () => {
+  const flash = S.flash; S.flash = null;
+  let err = '';
+  if (S.locked) err = `<div class="notice err" role="alert"><b>Túl sok sikertelen próbálkozás.</b> A bejelentkezést 15 percre zároltuk, ${fmtT(NOW_MIN + 15)}-kor próbálkozhatsz újra. <br><button class="linkish small" data-action="unlock">Zárolás feloldása (prototípus)</button></div>`;
+  else if (S.loginErr === 'bad') err = `<div class="notice err" role="alert">Hibás e-mail-cím vagy jelszó.</div>`;
+  else if (S.loginErr === 'unconfirmed') err = `<div class="notice warn" role="alert">Előbb erősítsd meg az e-mail-címedet a neked küldött levélben található linkkel.</div>`;
+  return `<div class="wrap"><div class="auth"><div class="card">
+    <div><h1 class="h-page">Bejelentkezés</h1><p class="muted">Lépj be az egyetemi e-mail-címeddel.</p></div>
+    ${flash ? `<div class="notice info">${flash}</div>` : ''}${err}
+    <form class="form" data-form="login" novalidate>
+      <div class="field"><label for="login-email">E-mail-cím</label><input class="input" id="login-email" name="login-email" type="email" autocomplete="username" value="${esc(S.prefillEmail)}" ${S.locked ? 'disabled' : ''}></div>
+      <div class="field"><label for="login-pw">Jelszó</label><input class="input" id="login-pw" name="login-pw" type="password" autocomplete="current-password" ${S.locked ? 'disabled' : ''}></div>
+      <button class="btn primary lg block" type="submit" ${S.locked ? 'disabled' : ''}>Bejelentkezés</button>
+    </form>
+    <div class="row" style="justify-content:space-between"><button class="linkish small" data-action="resetPw" data-email="">Elfelejtetted a jelszavad?</button><button class="linkish small" data-action="go" data-to="regisztracio">Regisztráció</button></div>
+    <div class="demo-hint">Demófiókok: <span class="mono">${RKA}</span> / <span class="mono">tanulas2027</span> (hallgató), <span class="mono">${ADM}</span> / <span class="mono">admin2027</span> (adminisztrátor). Sikertelen próbálkozások eddig: ${S.fails} / 5.</div>
+  </div></div></div>`;
+};
+
+function reminderText(b){
+  if (!user().reminders) return 'Emlékeztető kikapcsolva';
+  const at = b.start - 30;
+  return abs(b.day, at) > NOW_ABS ? `Emlékeztető: ${fmtT(at)}` : 'Emlékeztető elküldve';
+}
+SCREENS.kezdolap = () => {
+  const u = user(), up = upcoming(), first = u.name.split(' ').slice(-1)[0], fr = freeNow();
+  return `<div class="wrap stack">
+    <div><p class="eyebrow">${fmtDate(NOW_DAY)} · ${fmtT(NOW_MIN)} · vizsgaidőszak, 2. hét</p><h1 class="h-page">Jó reggelt, ${esc(first)}!</h1></div>
+    <div class="dash">
+      <section class="card cta-card">
+        <div class="stack" style="gap:8px"><h2>Tanulnál ma?</h2><p class="muted">${fr.length} terem szabad most a campuson. Foglalj előre, legfeljebb 3 órára.</p></div>
+        <div><button class="btn primary lg" data-action="go" data-to="termek">Terem foglalása</button></div>
+      </section>
+      <section class="card">
+        <div class="sec-head"><h2>Közelgő foglalásaid</h2><span class="chip accent">${activeFuture().length} / 2 aktív</span></div>
+        ${up.length ? up.map(b => { const r = roomById(b.roomId); return `<div class="mini"><div><b>${esc(r.code)}</b> · ${esc(r.name)}<br><span class="small muted">${b.day === NOW_DAY ? 'Ma' : fmtShort(b.day)}, <span class="mono">${fmtT(b.start)}–${fmtT(b.end)}</span> · ${reminderText(b)}</span></div><button class="btn sm" data-action="askCancel" data-id="${b.id}">Lemondás</button></div>`; }).join('')
+          : `<p class="muted">Nincs közelgő foglalásod.</p>`}
+        <div style="margin-top:10px"><button class="btn ghost sm" data-action="go" data-to="foglalasaim">Összes foglalásom</button></div>
+      </section>
+    </div>
+    <section class="card">
+      <div class="sec-head"><h2>Most szabad</h2><button class="btn ghost sm" data-action="go" data-to="termek">Összes terem</button></div>
+      <ul class="now-list">${fr.map(r => `<li><span class="code">${esc(r.code)}</span><span>${esc(r.name)}<br><span class="muted small">${esc(r.building)} · ${r.cap} fő</span></span><button class="btn sm" data-action="go" data-to="terem-${r.id}">Naptár</button></li>`).join('') || '<li><span></span><span class="muted">Most egyetlen terem sem szabad.</span><span></span></li>'}</ul>
+    </section>
+  </div>`;
+};
+
+function filtered(){
+  const f = S.filters;
+  return activeRooms().filter(r => (!f.building || r.building === f.building) && (!f.minCap || r.cap >= Number(f.minCap)) && f.eq.every(e => r.eq.includes(e)));
+}
+function roomCard(r){
+  const st = nowStatus(r);
+  return `<button class="room-card card" data-action="go" data-to="terem-${r.id}">
+    <span class="fp-box">${floorplan(r)}</span>
+    <span class="rc-top"><span class="code">${esc(r.code)}</span><span class="chip ${st.free ? 'ok' : ''}">${st.text}</span></span>
+    <span class="rc-title">${esc(r.name)}</span>
+    <span class="rc-meta">${esc(r.building)} · ${esc(r.floor)} · ${r.cap} fő</span>
+    <span class="chips">${r.eq.map(e => `<span class="chip">${EQ[e]}</span>`).join('')}</span>
+  </button>`;
+}
+function roomResults(){
+  const list = filtered();
+  if (!list.length) return `<div class="card empty"><h3>Nincs a szűrésnek megfelelő terem</h3><p class="muted">Próbálj kisebb férőhelyet vagy kevesebb felszereltséget megadni.</p><button class="btn" data-action="clearFilters">Szűrők törlése</button></div>`;
+  return `<div class="room-grid">${list.map(roomCard).join('')}</div>`;
+}
+const countText = () => { const n = filtered().length, all = activeRooms().length; return n === all ? `${all} aktív terem` : `${n} / ${all} terem felel meg a szűrésnek`; };
+SCREENS.termek = () => {
+  const f = S.filters;
+  return `<div class="wrap stack">
+    <div><h1 class="h-page">Termek</h1><p class="muted" id="room-count">${countText()}</p></div>
+    <div class="rooms-layout">
+      <aside class="card filters" aria-label="Szűrők">
+        <h2 class="h-sm">Szűrés</h2>
+        <div class="field"><label for="f-building">Épület</label><select class="input" id="f-building" data-filter><option value="">Összes épület</option>${BUILDINGS.map(b => `<option ${f.building === b ? 'selected' : ''}>${b}</option>`).join('')}</select></div>
+        <div class="field"><label for="f-cap">Legalább ennyi férőhely</label><input class="input" id="f-cap" type="number" min="1" max="200" inputmode="numeric" placeholder="pl. 6" value="${esc(f.minCap)}" data-filter></div>
+        <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="lbl" style="font-weight:600;font-size:.88rem;margin-bottom:6px">Felszereltség</legend>
+          ${Object.entries(EQ).map(([k,l]) => `<label class="check"><input type="checkbox" name="f-eq" id="f-eq-${k}" value="${k}" ${f.eq.includes(k) ? 'checked' : ''} data-filter> ${l}</label>`).join('')}
+        </fieldset>
+        <button class="btn sm" data-action="clearFilters">Szűrők törlése</button>
+      </aside>
+      <div id="room-results" aria-live="polite">${roomResults()}</div>
+    </div>
+  </div>`;
+};
+
+function calendar(r){
+  const mon = addDays(mondayOf(NOW_DAY), S.weekOffset*7), days = [...Array(7)].map((_,i) => addDays(mon,i));
+  const T0 = 480, ROWS = 24, s = S.sel && S.sel.roomId === r.id ? S.sel : null, sErr = s ? checkSel(s).length > 0 : false;
+  let c = '';
+  days.forEach((k,i) => { c += `<div class="cal-dh ${k === NOW_DAY ? 'today' : ''}" style="grid-column:${i+2};grid-row:1"><span>${DSHORT[wday(k)]}</span><b>${parse(k).d}</b></div>`; });
+  for (let j = 0; j < ROWS; j += 2) c += `<div class="cal-t" style="grid-column:1;grid-row:${j+2}">${fmtT(T0 + j*30)}</div>`;
+  days.forEach((k,i) => {
+    const col = i + 2, h = hoursFor(r,k);
+    if (!h){ c += `<div class="cal-closed" style="grid-column:${col};grid-row:2 / span ${ROWS}"><span>Zárva</span></div>`; return; }
+    const bs = activeFor(r.id,k);
+    for (let j = 0; j < ROWS; j++){
+      const t = T0 + j*30, pos = `grid-column:${col};grid-row:${j+2}`, hh = t % 60 ? ' hh' : '';
+      const inSel = s && s.day === k && t >= s.start && t < s.start + s.dur;
+      if (t < h[0] || t >= h[1]){ c += `<div class="cell off" style="${pos}"></div>`; continue; }
+      const b = bs.find(b => b.start <= t && t < b.end);
+      if (b){
+        const own = b.user === S.me, first = b.start === t, last = b.end === t + 30;
+        c += `<div class="cell ${own ? 'mine' : 'busy'}${first ? ' bs' : ''}${last ? ' be' : ''}${inSel ? ' clash' : ''}" style="${pos}" title="${own ? 'Saját foglalás' : 'Foglalt'} ${fmtT(b.start)}–${fmtT(b.end)}">${first ? `<span>${own ? 'Saját' : 'Foglalt'}</span>` : ''}</div>`;
+        continue;
+      }
+      if (abs(k,t) < NOW_ABS){ c += `<div class="cell past${hh}" style="${pos}"></div>`; continue; }
+      const cls = inSel ? (sErr ? ' sel err' : ' sel') : '';
+      const lbl = inSel && t === s.start ? `<span>${fmtT(s.start)}–${fmtT(s.start + s.dur)}</span>` : '';
+      c += `<button class="cell free${hh}${cls}${inSel && t === s.start ? ' bs' : ''}${inSel && t === s.start + s.dur - 30 ? ' be' : ''}" style="${pos}" data-action="pick" data-day="${k}" data-t="${t}" aria-label="${DAYS[wday(k)]} ${fmtT(t)}, szabad">${lbl}</button>`;
+    }
+  });
+  const ti = days.indexOf(NOW_DAY);
+  if (ti >= 0){ const row = Math.floor((NOW_MIN - T0)/30) + 2; c += `<div class="nowline" aria-hidden="true" style="grid-column:${ti+2};grid-row:${row};margin-top:${Math.round((NOW_MIN % 30)/30*21)}px"></div>`; }
+  return `<div class="cal-nav">
+      <button class="btn sm" data-action="week" data-d="-1" ${S.weekOffset <= 0 ? 'disabled' : ''}>‹ Előző hét</button>
+      <span class="wk">${isoWeek(mon)}. hét <span class="muted mono small">${fmtShort(mon)} – ${fmtShort(addDays(mon,6))}</span></span>
+      <button class="btn sm" data-action="week" data-d="1" ${S.weekOffset >= 4 ? 'disabled' : ''}>Következő hét ›</button>
+    </div>
+    <div class="cal-wrap"><div class="cal" role="grid" aria-label="Heti foglaltság">${c}</div></div>
+    <div class="legend"><span><i class="sw free"></i>Szabad</span><span><i class="sw busy"></i>Foglalt</span><span><i class="sw mine"></i>Saját foglalás</span><span><i class="sw sel"></i>Kijelölés</span><span><i class="sw off"></i>Zárva / elmúlt</span></div>`;
+}
+function quota(){ const n = activeFuture().length; return `<div class="quota"><i class="${n >= 1 ? 'on' : ''}"></i><i class="${n >= 2 ? 'on' : ''}"></i> Aktív jövőbeli foglalásaid: <b>${n} / 2</b></div>`; }
+function bookingPanel(r){
+  const notice = S.roomNotice ? `<div class="notice ${S.roomNotice.kind}" role="status">${S.roomNotice.html}</div>` : '';
+  const s = S.sel && S.sel.roomId === r.id ? S.sel : null;
+  if (!s) return `<aside class="panel card" aria-label="Foglalás">${notice}<h2 class="h-sm">Foglalás</h2><p class="muted">Kattints egy szabad sávra a naptárban. A kijelölés 1 órával indul, és legfeljebb 3 órára hosszabbítható.</p>${quota()}</aside>`;
+  const h = hoursFor(r, s.day) || [r.open, r.close], errs = checkSel(s);
+  let starts = '';
+  for (let t = h[0]; t < h[1]; t += 30) if (abs(s.day,t) >= NOW_ABS) starts += `<option value="${t}" ${t === s.start ? 'selected' : ''}>${fmtT(t)}</option>`;
+  const durs = [30,60,90,120,150,180,210,240].map(d => `<option value="${d}" ${d === s.dur ? 'selected' : ''}>${durLabel(d)}</option>`).join('');
+  return `<aside class="panel card" aria-label="Foglalás">${notice}
+    <h2 class="h-sm">Foglalás</h2>
+    <p class="muted small">${fmtDate(s.day)}</p>
+    <p class="range">${fmtT(s.start)}–${fmtT(s.start + s.dur)}</p>
+    <div class="two">
+      <div class="field"><label for="bk-start">Kezdés</label><select class="input" id="bk-start" data-change="selStart">${starts}</select></div>
+      <div class="field"><label for="bk-dur">Időtartam</label><select class="input" id="bk-dur" data-change="selDur">${durs}</select></div>
+    </div>
+    ${errs.length ? `<ul class="errs" role="alert">${errs.map(e => `<li>${e}</li>`).join('')}</ul>` : ''}
+    ${quota()}
+    <button class="btn primary lg block" data-action="toConfirm" ${errs.length ? 'disabled' : ''}>Tovább a foglaláshoz</button>
+    <button class="btn ghost sm" data-action="clearSel">Kijelölés törlése</button>
+  </aside>`;
+}
+SCREENS.terem = (id) => {
+  const r = roomById(id);
+  if (!r || !r.active) return `<div class="wrap"><div class="card empty"><h3>Ez a terem jelenleg nem foglalható</h3><p class="muted">Lehet, hogy az adminisztrátor inaktiválta.</p><button class="btn" data-action="go" data-to="termek">Vissza a termekhez</button></div></div>`;
+  S.roomId = id;
+  const st = nowStatus(r);
+  return `<div class="wrap stack">
+    <div><button class="btn ghost sm" data-action="go" data-to="termek">‹ Vissza a termekhez</button></div>
+    <section class="card room-head">
+      <span class="fp-box">${floorplan(r)}</span>
+      <div class="info">
+        <div class="row"><span class="code lg">${esc(r.code)}</span><span class="chip ${st.free ? 'ok' : ''}">${st.text}</span></div>
+        <h1 class="h-page">${esc(r.name)}</h1>
+        <p class="muted">${esc(r.building)}, ${esc(r.floor)} · ${r.cap} férőhely · Nyitva: H–P <span class="mono">${fmtT(r.open)}–${fmtT(r.close)}</span>${r.sat ? ', Szo <span class="mono">9:00–14:00</span>' : ''}</p>
+        <div class="chips">${r.eq.map(e => `<span class="chip">${EQ[e]}</span>`).join('')}</div>
+      </div>
+    </section>
+    <div class="room-body">
+      <section class="card cal-card" aria-label="Heti naptár">${calendar(r)}</section>
+      ${bookingPanel(r)}
+    </div>
+  </div>`;
+};
+
+function statusChips(b){
+  if (b.status === 'cancelled') return `<span class="chip">Lemondva</span>${b.late ? '<span class="chip warn">Késői lemondás</span>' : ''}`;
+  if (abs(b.day,b.end) <= NOW_ABS) return '<span class="chip">Lezajlott</span>';
+  if (abs(b.day,b.start) <= NOW_ABS) return '<span class="chip ok">Folyamatban</span>';
+  const mins = abs(b.day,b.start) - NOW_ABS;
+  return `<span class="chip ok">Aktív</span>${mins < 60 ? `<span class="chip warn">${mins} perc múlva kezdődik</span>` : ''}`;
+}
+function bookingRow(b, upcomingTab){
+  const r = roomById(b.roomId), p = parse(b.day);
+  return `<div class="card brow">
+    <div class="datebox"><b>${p.d}</b><span>${MONTHS[p.m-1].replace('.','')}</span></div>
+    <div class="bt"><div><b>${esc(r.code)}</b> · ${esc(r.name)}</div>
+      <div class="small muted">${DAYS[wday(b.day)]}, <span class="mono">${fmtT(b.start)}–${fmtT(b.end)}</span> · ${esc(r.building)}, ${esc(r.floor)}${upcomingTab ? ' · ' + reminderText(b) : ''}</div>
+      <div class="chips">${statusChips(b)}</div></div>
+    <div class="acts">${upcomingTab ? `<button class="btn sm" data-action="go" data-to="terem-${r.id}">Naptár</button><button class="btn sm" data-action="askCancel" data-id="${b.id}">Lemondás</button>` : ''}</div>
+  </div>`;
+}
+SCREENS.foglalasaim = () => {
+  const up = upcoming();
+  const hist = mine().filter(b => (b.status === 'cancelled' || abs(b.day,b.end) <= NOW_ABS) && dnum(b.day) >= dnum(NOW_DAY) - 90).sort((a,b) => abs(b.day,b.start) - abs(a.day,a.start));
+  const list = S.tab === 'kozelgo'
+    ? (up.length ? up.map(b => bookingRow(b, true)).join('') : `<div class="card empty"><h3>Nincs közelgő foglalásod</h3><button class="btn primary" data-action="go" data-to="termek">Terem foglalása</button></div>`)
+    : (hist.length ? hist.map(b => bookingRow(b, false)).join('') : `<div class="card empty"><p class="muted">Az elmúlt 90 napban nem volt foglalásod.</p></div>`);
+  return `<div class="wrap stack">
+    <div class="sec-head" style="margin:0"><div><h1 class="h-page">Foglalásaim</h1><p class="muted">Egyszerre legfeljebb 2 aktív jövőbeli foglalásod lehet.</p></div>${quota()}</div>
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="${S.tab === 'kozelgo'}" data-action="tab" data-v="kozelgo">Közelgő (${up.length})</button>
+      <button role="tab" aria-selected="${S.tab === 'elozmeny'}" data-action="tab" data-v="elozmeny">Előzmények</button>
+    </div>
+    ${S.tab === 'elozmeny' ? '<p class="small muted">Az elmúlt 90 nap foglalásai, a legfrissebb elöl.</p>' : ''}
+    <div class="blist" role="tabpanel">${list}</div>
+  </div>`;
+};
+
+SCREENS.profil = () => {
+  const u = user();
+  return `<div class="wrap stack">
+    <h1 class="h-page">Profil és beállítások</h1>
+    <div class="prof">
+      <section class="card stack" style="gap:14px"><h2 class="h-sm">Fiókadatok</h2>
+        <dl class="kv"><dt>Név</dt><dd>${esc(u.name)}</dd><dt>E-mail-cím</dt><dd class="mono small">${esc(S.me)}</dd><dt>Szerepkör</dt><dd>Hallgató</dd></dl>
+      </section>
+      <section class="card stack" style="gap:14px"><h2 class="h-sm">Értesítések</h2>
+        <label class="switch" for="prof-rem"><input type="checkbox" id="prof-rem" data-change="reminders" ${u.reminders ? 'checked' : ''}><span class="track"></span><span><b>Emlékeztető e-mail 30 perccel a kezdés előtt</b><br><span class="small muted">A visszaigazoló e-maileket mindig elküldjük.</span></span></label>
+        <div class="field"><label for="prof-lang">A felület nyelve</label><select class="input" id="prof-lang" data-change="langSel"><option value="hu" selected>Magyar</option><option value="en">English</option></select></div>
+      </section>
+      <section class="card stack" style="gap:14px"><h2 class="h-sm">Adataim</h2>
+        <p class="muted small">Csak a nevedet, az e-mail-címedet és a foglalásaidat tároljuk. Az 1 évnél régebbi foglalásokat automatikusan anonimizáljuk.</p>
+        <div class="row"><button class="btn" data-action="export">Adataim exportálása</button><button class="btn" data-action="askDelete" style="color:var(--err)">Fiók törlése</button></div>
+      </section>
+    </div>
+  </div>`;
+};
+
+function futureActive(r){
+  const out = [];
+  for (let i = 0; i < 28; i++){ const k = addDays(NOW_DAY,i); for (const b of bookingsFor(r.id,k)) if (b.status === 'active' && abs(b.day,b.start) > NOW_ABS) out.push(b); }
+  return out;
+}
+function roomForm(){
+  const e = S.editRoom, v = e.v, er = e.errs || {};
+  const fe = k => er[k] ? `<span class="err-text">${er[k]}</span>` : '';
+  const opts = (from,to,val) => { let o = ''; for (let t = from; t <= to; t += 60) o += `<option value="${t}" ${t === val ? 'selected' : ''}>${fmtT(t)}</option>`; return o; };
+  return `<section class="card"><form class="room-form" data-form="room" novalidate>
+    <div class="sec-head" style="margin:0"><h2>${e.isNew ? 'Új terem' : 'Terem szerkesztése: ' + esc(v.code)}</h2><button type="button" class="btn ghost sm" data-action="cancelEdit">Mégse</button></div>
+    <div class="two">
+      <div class="field"><label for="rf-code">Teremkód</label><input class="input ${er.code ? 'invalid' : ''}" id="rf-code" value="${esc(v.code)}" placeholder="pl. C/201">${fe('code')}</div>
+      <div class="field"><label for="rf-name">Név</label><input class="input ${er.name ? 'invalid' : ''}" id="rf-name" value="${esc(v.name)}" placeholder="pl. Csoportszoba">${fe('name')}</div>
+      <div class="field"><label for="rf-building">Épület</label><select class="input" id="rf-building">${BUILDINGS.map(b => `<option ${v.building === b ? 'selected' : ''}>${b}</option>`).join('')}</select></div>
+      <div class="field"><label for="rf-floor">Emelet</label><input class="input" id="rf-floor" value="${esc(v.floor)}" placeholder="pl. 2. emelet"></div>
+      <div class="field"><label for="rf-cap">Férőhely</label><input class="input ${er.cap ? 'invalid' : ''}" id="rf-cap" type="number" min="1" max="200" value="${esc(v.cap)}">${fe('cap')}</div>
+      <div class="two"><div class="field"><label for="rf-open">Nyitás (H–P)</label><select class="input" id="rf-open">${opts(480,720,v.open)}</select></div><div class="field"><label for="rf-close">Zárás (H–P)</label><select class="input" id="rf-close">${opts(840,1200,v.close)}</select></div></div>
+    </div>
+    <fieldset class="field" style="border:0;padding:0;margin:0"><legend style="font-weight:600;font-size:.88rem;margin-bottom:6px">Felszereltség</legend>
+      <div class="eq-grid">${Object.entries(EQ).map(([k,l]) => `<label class="check"><input type="checkbox" name="rf-eq" value="${k}" ${v.eq.includes(k) ? 'checked' : ''}> ${l}</label>`).join('')}</div></fieldset>
+    <label class="check"><input type="checkbox" id="rf-sat" ${v.sat ? 'checked' : ''}> Szombaton is nyitva (9:00–14:00)</label>
+    <div class="actions" style="justify-content:flex-start"><button class="btn primary" type="submit">Mentés</button></div>
+  </form></section>`;
+}
+SCREENS['admin-termek'] = () => {
+  return `<div class="wrap stack">
+    <div class="sec-head" style="margin:0"><div><h1 class="h-page">Termek kezelése</h1><p class="muted">${activeRooms().length} aktív és ${S.rooms.length - activeRooms().length} inaktív terem</p></div><button class="btn primary" data-action="newRoom">Új terem</button></div>
+    ${S.editRoom ? roomForm() : ''}
+    <section class="card" style="padding:8px 0"><div class="tbl-wrap"><table>
+      <thead><tr><th>Kód</th><th>Név</th><th>Épület</th><th>Férőhely</th><th>Felszereltség</th><th>Állapot</th><th><span class="sr">Műveletek</span></th></tr></thead>
+      <tbody>${S.rooms.map(r => `<tr class="${r.active ? '' : 'inactive'}">
+        <td class="code">${esc(r.code)}</td><td>${esc(r.name)}</td><td>${esc(r.building)}</td><td class="num">${r.cap} fő</td>
+        <td><span class="chips">${r.eq.map(e => `<span class="chip">${EQ[e]}</span>`).join('')}</span></td>
+        <td>${r.active ? '<span class="chip ok">Aktív</span>' : '<span class="chip">Inaktív</span>'}</td>
+        <td><span class="row" style="flex-wrap:nowrap"><button class="btn sm" data-action="editRoom" data-id="${r.id}">Szerkesztés</button>${r.active ? `<button class="btn sm" data-action="askInactivate" data-id="${r.id}">Inaktiválás</button>` : `<button class="btn sm" data-action="reactivate" data-id="${r.id}">Újraaktiválás</button>`}</span></td>
+      </tr>`).join('')}</tbody></table></div></section>
+  </div>`;
+};
+
+function computeStats(from, to){
+  const rows = S.rooms.map(r => {
+    let open = 0, booked = 0, n = 0;
+    for (let k = from; dnum(k) <= dnum(to); k = addDays(k,1)){
+      const h = hoursFor(r,k); if (!h || r.seedInactive) continue;
+      open += h[1] - h[0];
+      for (const b of activeFor(r.id,k)){ booked += b.end - b.start; n++; }
+    }
+    return {r, open, booked, n, pct: open ? booked/open*100 : 0};
+  }).filter(x => x.open > 0).sort((a,b) => b.pct - a.pct);
+  return rows;
+}
+const hu1 = x => x.toFixed(1).replace('.', ',');
+const hrs = m => (m/60) % 1 ? hu1(m/60) : String(m/60);
+function statsRange(){
+  const st = S.stats, mon = mondayOf(NOW_DAY);
+  if (st.preset === 'prevweek') return [addDays(mon,-7), addDays(mon,-1)];
+  if (st.preset === 'last30') return [addDays(NOW_DAY,-30), addDays(NOW_DAY,-1)];
+  return [st.from, st.to];
+}
+SCREENS['admin-statisztika'] = () => {
+  const [from, to] = statsRange(), st = S.stats;
+  let err = '';
+  if (!from || !to) err = 'Add meg a kezdő és a záró dátumot.';
+  else if (dnum(to) < dnum(from)) err = 'A záró dátum nem lehet korábbi a kezdő dátumnál.';
+  else if (dnum(to) - dnum(from) > 91) err = 'Legfeljebb 92 napos időszakot választhatsz.';
+  const rows = err ? [] : computeStats(from, to);
+  const tOpen = rows.reduce((a,x) => a + x.open, 0), tB = rows.reduce((a,x) => a + x.booked, 0), tN = rows.reduce((a,x) => a + x.n, 0);
+  S.lastStats = {from, to, rows};
+  return `<div class="wrap stack">
+    <div class="sec-head" style="margin:0"><div><h1 class="h-page">Statisztikák</h1><p class="muted">A termek kihasználtsága: a foglalt órák és a nyitvatartási órák aránya.</p></div><button class="btn primary" data-action="csv" ${err ? 'disabled' : ''}>CSV exportálás</button></div>
+    <section class="card period">
+      <div class="field"><span class="lbl">Időszak</span><span class="pseg" role="group" aria-label="Előre megadott időszak">${[['prevweek','Előző hét'],['last30','Elmúlt 30 nap'],['custom','Egyéni']].map(([v,l]) => `<button data-action="preset" data-v="${v}" aria-pressed="${st.preset === v}">${l}</button>`).join('')}</span></div>
+      <div class="field"><label for="st-from">Kezdő dátum</label><input class="input" type="date" id="st-from" value="${from}" data-change="statDate"></div>
+      <div class="field"><label for="st-to">Záró dátum</label><input class="input" type="date" id="st-to" value="${to}" data-change="statDate"></div>
+    </section>
+    ${err ? `<div class="notice err" role="alert">${err}</div>` : `
+    <div class="kpis">
+      <div class="card kpi"><span class="eyebrow">Átlagos kihasználtság</span><b>${hu1(tOpen ? tB/tOpen*100 : 0)}%</b><span class="small muted">${fmtShort(from)} – ${fmtShort(to)}</span></div>
+      <div class="card kpi"><span class="eyebrow">Legkihasználtabb</span><b>${rows[0] ? esc(rows[0].r.code) : '–'}</b><span class="small muted">${rows[0] ? hu1(rows[0].pct) + '% · ' + esc(rows[0].r.name) : ''}</span></div>
+      <div class="card kpi"><span class="eyebrow">Foglalások</span><b>${tN}</b><span class="small muted">aktív, lemondás nélkül</span></div>
+      <div class="card kpi"><span class="eyebrow">Foglalt órák</span><b>${hrs(tB)}</b><span class="small muted">${hrs(tOpen)} nyitvatartási órából</span></div>
+    </div>
+    <section class="card stack" style="gap:14px">
+      <div class="sec-head" style="margin:0"><h2 class="h-sm">Kihasználtság termenként</h2><span class="small muted">80% felett: telített</span></div>
+      <div class="axis" aria-hidden="true"><span></span><div><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div><span></span></div>
+      <div class="bars">${rows.map(x => `<div class="bar-row">
+        <div class="bar-name"><b class="code">${esc(x.r.code)}</b><span>${esc(x.r.name)}${x.r.active ? '' : ' (inaktív)'}</span></div>
+        <div class="bar-track" role="img" aria-label="${esc(x.r.code)}: ${hu1(x.pct)}%"><div class="bar-fill ${x.pct >= 80 ? 'hot' : ''}" style="width:${Math.min(100, x.pct).toFixed(1)}%"></div></div>
+        <div class="bar-val"><b>${hu1(x.pct)}%</b><span>${hrs(x.booked)} / ${hrs(x.open)} óra</span></div>
+      </div>`).join('')}</div>
+    </section>`}
+  </div>`;
+};
+
+SCREENS.tiltott = (ctx) => {
+  const why = ctx === 'booking' ? 'Ez a foglalás egy másik felhasználóhoz tartozik, ezért nem mondhatod le.' : 'A teremkezelés csak adminisztrátoroknak érhető el.';
+  return `<div class="wrap"><div class="card forbidden">
+    <span class="big">403</span><h1 class="h-page">Hozzáférés megtagadva</h1><p class="muted">${why}</p>
+    <button class="btn primary" data-action="go" data-to="${home()}">Vissza a kezdőlapra</button>
+  </div></div>`;
+};
+
+/* ---------- Párbeszédablakok ---------- */
+function renderModal(){
+  const m = S.modal, root = $('#modal-root');
+  if (!m){ root.innerHTML = ''; return; }
+  let body = '';
+  if (m.type === 'confirm'){
+    const s = S.sel, r = roomById(s.roomId), u = user();
+    body = `<span class="tag">K-08</span><h2 id="m-title">Foglalás megerősítése</h2>
+      <dl class="sum"><dt>Terem</dt><dd><b>${esc(r.code)}</b> · ${esc(r.name)}</dd><dt>Hely</dt><dd>${esc(r.building)}, ${esc(r.floor)}</dd>
+      <dt>Időpont</dt><dd>${fmtDate(s.day)}<br><b class="mono">${fmtT(s.start)}–${fmtT(s.start + s.dur)}</b> (${durLabel(s.dur)})</dd>
+      <dt>Emlékeztető</dt><dd>${u.reminders ? `E-mailben, ${fmtT(s.start - 30)}-kor` : 'Kikapcsoltad a profilodban'}</dd></dl>
+      <p class="small muted">A foglalás visszaigazolását e-mailben is elküldjük. Ha mégsem tudsz menni, a Foglalásaim oldalon lemondhatod.</p>
+      <div class="actions"><button class="btn" data-action="closeModal">Vissza</button><button class="btn primary" data-action="confirmBooking" data-autofocus>Foglalás megerősítése</button></div>`;
+  } else if (m.type === 'limit'){
+    body = `<h2 id="m-title">Elérted a foglalási korlátot</h2>
+      <div class="notice err">Egyszerre legfeljebb 2 aktív jövőbeli foglalásod lehet, és most ennyi van. Ezt a foglalást nem mentettük.</div>
+      <p class="muted small">Mondj le egy meglévő foglalást, vagy várd meg, amíg az egyik lezajlik.</p>
+      <div class="actions"><button class="btn" data-action="closeModal">Bezárás</button><button class="btn primary" data-action="toBookings" data-autofocus>Foglalásaim</button></div>`;
+  } else if (m.type === 'cancel'){
+    const b = S.bookings.find(x => x.id === m.id), r = roomById(b.roomId), mins = abs(b.day,b.start) - NOW_ABS, late = mins < 60;
+    body = `<span class="tag">K-10</span><h2 id="m-title">Lemondod a foglalást?</h2>
+      <dl class="sum"><dt>Terem</dt><dd><b>${esc(r.code)}</b> · ${esc(r.name)}</dd><dt>Időpont</dt><dd>${fmtDate(b.day)}<br><b class="mono">${fmtT(b.start)}–${fmtT(b.end)}</b></dd></dl>
+      ${late ? `<div class="notice warn">A foglalás ${mins} perc múlva kezdődik. Mivel 1 óránál kevesebb van hátra, a lemondást <b>késői lemondásként</b> rögzítjük.</div>` : `<div class="notice info">Az idősáv azonnal felszabadul, és más is lefoglalhatja.</div>`}
+      <div class="actions"><button class="btn" data-action="closeModal" data-autofocus>Megtartom</button><button class="btn danger" data-action="doCancel" data-id="${b.id}">Lemondás megerősítése</button></div>`;
+  } else if (m.type === 'inactivate'){
+    const r = roomById(m.id), n = futureActive(r).length;
+    body = `<span class="tag">K-13</span><h2 id="m-title">${art(r.code)} ${esc(r.code)} terem inaktiválása</h2>
+      <p>Az inaktivált terem eltűnik a hallgatók teremlistájából, és nem lehet rá foglalni.</p>
+      ${n ? `<div class="notice warn"><b>${n} jövőbeli foglalás</b> tartozik ehhez a teremhez. Mindegyiket lemondjuk, az érintett hallgatók pedig értesítő e-mailt kapnak.</div>` : `<div class="notice info">Ehhez a teremhez nincs jövőbeli foglalás.</div>`}
+      <div class="actions"><button class="btn" data-action="closeModal" data-autofocus>Mégse</button><button class="btn danger" data-action="doInactivate" data-id="${r.id}">${n ? 'Inaktiválás és foglalások lemondása' : 'Inaktiválás'}</button></div>`;
+  } else if (m.type === 'delete'){
+    const n = activeFuture().length;
+    body = `<h2 id="m-title">Biztosan törlöd a fiókodat?</h2>
+      <p>A törlés után nem tudsz bejelentkezni.${n ? ` A ${n} jövőbeli foglalásodat lemondjuk.` : ''} A személyes adataidat 30 napon belül véglegesen töröljük vagy anonimizáljuk.</p>
+      <div class="actions"><button class="btn" data-action="closeModal" data-autofocus>Mégse</button><button class="btn danger" data-action="doDelete">Fiók végleges törlése</button></div>`;
+  } else if (m.type === 'csv'){
+    const {from, to, rows} = S.lastStats;
+    const csv = ['terem_kod;terem_neve;epulet;nyitvatartas_ora;foglalt_ora;foglalasok_szama;kihasznaltsag_szazalek']
+      .concat(rows.map(x => [x.r.code, x.r.name, x.r.building, hrs(x.open), hrs(x.booked), x.n, hu1(x.pct)].join(';'))).join('\n');
+    const fname = `studyroom_kihasznaltsag_${from}_${to}.csv`;
+    body = `<h2 id="m-title">CSV exportálás</h2>
+      <p class="small muted">Az éles rendszerben a <span class="mono">${fname}</span> fájl letöltődik (UTF-8, pontosvesszővel elválasztva, hogy a magyar Excel helyesen nyissa meg). A prototípusban itt látod és másolhatod a tartalmát.</p>
+      <textarea class="csv" id="csv-text" readonly>${esc(csv)}</textarea>
+      <div class="actions"><button class="btn" data-action="closeModal">Bezárás</button><button class="btn primary" data-action="copyCsv" data-autofocus>Másolás</button></div>`;
+  }
+  const key = m.type + (m.id || '');
+  root.innerHTML = `<div class="modal-bg" data-action="bgClose"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">${body}</div></div>`;
+  if (S.modalKey !== key){ S.modalKey = key; const f = root.querySelector('[data-autofocus]') || root.querySelector('button'); f && f.focus(); }
+}
+
+/* ---------- Kimenő e-mailek panel ---------- */
+function renderMail(){
+  const el = $('#mail'); el.hidden = !S.mailOpen;
+  if (!S.mailOpen){ el.innerHTML = ''; return; }
+  let sched = '';
+  if (roleOf() === 'student'){
+    const up = upcoming().filter(b => abs(b.day, b.start - 30) > NOW_ABS);
+    sched = `<div class="mail-sched"><b>Ütemezett emlékeztetők (FR-08)</b>${!user().reminders ? '<span class="muted">Kikapcsoltad az emlékeztetőket, ezért nem küldünk.</span>' : up.length ? up.map(b => `<span class="muted"><span class="mono">${b.day === NOW_DAY ? 'ma' : fmtShort(b.day)} ${fmtT(b.start - 30)}</span> · ${esc(roomById(b.roomId).code)}, ${fmtT(b.start)}-kor kezdődik</span>`).join('') : '<span class="muted">Nincs ütemezett emlékeztető.</span>'}</div>`;
+  }
+  el.innerHTML = `<div class="mail-head"><h2 class="h-sm">Kimenő e-mailek</h2><button class="btn sm" data-action="mailClose">Bezárás</button></div>
+    <p class="small muted">Szimuláció: ezeket a leveleket küldené ki a rendszer.</p>${sched}
+    ${S.mails.length ? S.mails.map(m => `<div class="mail-item"><span class="to">Címzett: ${esc(m.to)}</span><b>${esc(m.subject)}</b><p>${esc(m.body)}</p>${m.action && !m.used ? `<div><button class="btn sm primary" data-action="${m.action.act}" data-arg="${esc(m.action.arg)}" data-mail="${m.id}">${m.action.label}</button></div>` : ''}</div>`).join('') : '<p class="muted">Még nem küldtünk levelet.</p>'}`;
+}
+
+/* ---------- Megjelenítés ---------- */
+function render(){
+  const cw = $('.cal-wrap'), calScroll = cw ? cw.scrollLeft : null;
+  const {screen, param} = resolve();
+  const changed = screen !== S.current || param !== S.lastParam;
+  S.current = screen; S.lastParam = param;
+  if (changed && screen === 'kezdolap'){ S.clicks = 0; S.clicksValid = true; }
+  document.documentElement.classList.toggle('wf', S.wf);
+  $('#app').innerHTML = SCREENS[screen](param);
+  $('#hdr').innerHTML = renderHeader();
+  renderModal();
+  $('#pbar').innerHTML = renderBar();
+  renderMail();
+  const ncw = $('.cal-wrap'); if (ncw && calScroll != null && !changed) ncw.scrollLeft = calScroll;
+  if (changed) window.scrollTo(0, 0);
+}
+
+/* ---------- Műveletek ---------- */
+const A = {
+  go: d => { S.modal = null; if (d.to.startsWith('terem-') && S.current !== 'terem'){ S.weekOffset = 0; S.roomNotice = null; } go(d.to); },
+  role: d => { setRole(d.v); S.clicksValid = false; go(home()); },
+  wf: d => { S.wf = d.v === '1'; render(); },
+  lang: () => toast('Az angol nyelvű felület az éles alkalmazásban érhető el. A prototípus a magyar szövegeket mutatja.'),
+  logout: () => { S.me = null; S.sel = null; S.modal = null; go('nyito'); toast('Kijelentkeztél.'); },
+  mailOpen: () => { S.mailOpen = true; renderMail(); $('#mail button').focus(); },
+  mailClose: () => { S.mailOpen = false; renderMail(); },
+  resetPw: d => {
+    const email = d.email || ($('#login-email') && $('#login-email').value.trim()) || 'a megadott címre';
+    mail(email, 'Jelszó visszaállítása', 'Kattints a levélben lévő linkre, és adj meg új jelszót. A link 1 óráig érvényes.');
+    toast('Ha létezik fiók ezzel a címmel, elküldtük a jelszó-visszaállító e-mailt.'); render();
+  },
+  resend: () => { if (S.pending) mail(S.pending, 'Erősítsd meg a regisztrációdat', 'Kattints az alábbi linkre a fiókod aktiválásához.', {label:'Fiók megerősítése', act:'confirmReg', arg:S.pending}); toast('Újraküldtük a megerősítő e-mailt.'); render(); },
+  confirmReg: d => {
+    const a = S.accounts[d.arg]; if (a) a.confirmed = true;
+    S.mails.forEach(m => { if (m.action && m.action.arg === d.arg) m.used = true; });
+    S.mailOpen = false; S.prefillEmail = d.arg; S.pending = null; S.loginErr = null;
+    go('belepes'); toast('A fiókodat megerősítettük. Most már bejelentkezhetsz.', 'ok');
+  },
+  unlock: () => { S.locked = false; S.fails = 0; S.loginErr = null; render(); },
+  clearFilters: () => { S.filters = {building:'', minCap:'', eq:[]}; render(); },
+  pick: d => {
+    const s = {roomId:S.roomId, day:d.day, start:Number(d.t), dur:60};
+    if (checkSel(s).length && !checkSel({...s, dur:30}).length) s.dur = 30;
+    S.sel = s; S.roomNotice = null; render();
+  },
+  week: d => { S.weekOffset = Math.max(0, Math.min(4, S.weekOffset + Number(d.d))); render(); },
+  clearSel: () => { S.sel = null; render(); },
+  toConfirm: () => { if (S.sel && !checkSel(S.sel).length){ S.modal = {type:'confirm'}; render(); } },
+  closeModal: () => { S.modal = null; S.modalKey = null; render(); },
+  bgClose: (d, el, e) => { if (e.target === el) A.closeModal(); },
+  confirmBooking: () => {
+    const s = S.sel; if (!s) return;
+    const r = roomById(s.roomId);
+    if (activeFuture().length >= 2){ S.modal = {type:'limit'}; render(); return; }
+    if (S.simConflict){
+      S.simConflict = false;
+      S.bookings.push({id:'x' + (++S.seq), roomId:s.roomId, day:s.day, start:s.start, end:s.start + s.dur, user:'other', status:'active', late:false});
+      S.sel = null; S.modal = null;
+      S.roomNotice = {kind:'err', html:'<b>Ez az idősáv már nem elérhető.</b> Valaki pillanatokkal korábban lefoglalta. Frissítettük a naptárat, válassz másik sávot.'};
+      toast('Ez az idősáv már nem elérhető.', 'err'); render(); return;
+    }
+    const b = {id:'b' + (++S.seq), roomId:s.roomId, day:s.day, start:s.start, end:s.start + s.dur, user:S.me, status:'active', late:false};
+    S.bookings.push(b);
+    mail(S.me, `Foglalás visszaigazolása – ${r.code}`, `${r.name}, ${r.building}, ${r.floor}\n${fmtDate(b.day)}, ${fmtT(b.start)}–${fmtT(b.end)}\nHa mégsem tudsz menni, mondd le, hogy más is használhassa a termet.`);
+    S.sel = null; S.modal = null;
+    S.roomNotice = {kind:'ok', html:`<b>Lefoglaltad.</b> ${b.day === NOW_DAY ? 'Ma' : fmtShort(b.day)}, <span class="mono">${fmtT(b.start)}–${fmtT(b.end)}</span>. A visszaigazolást e-mailben elküldtük.${S.clicksValid ? `<br><span class="small">${S.clicks} kattintás a kezdőlaptól (NFR-07: legfeljebb 5).</span>` : ''}`};
+    toast('Foglalás mentve.', 'ok'); render();
+  },
+  toBookings: () => { S.modal = null; S.tab = 'kozelgo'; go('foglalasaim'); },
+  tab: d => { S.tab = d.v; render(); },
+  askCancel: d => { S.modal = {type:'cancel', id:d.id}; render(); },
+  doCancel: d => {
+    const b = S.bookings.find(x => x.id === d.id), late = abs(b.day,b.start) - NOW_ABS < 60;
+    b.status = 'cancelled'; b.late = late; S.modal = null;
+    toast(late ? 'Lemondtad. Késői lemondásként rögzítettük.' : 'Lemondtad. Az idősáv újra szabad.', 'ok'); render();
+  },
+  export: () => { mail(S.me, 'Elkészült az adataid exportja', 'Letöltési link: 7 napig érvényes.\nTartalom: név, e-mail-cím, foglalások (JSON).'); toast('Elkészítjük az exportot, a letöltési linket e-mailben küldjük.'); render(); },
+  askDelete: () => { S.modal = {type:'delete'}; render(); },
+  doDelete: () => {
+    activeFuture().forEach(b => b.status = 'cancelled');
+    S.accounts[S.me].deleted = true; S.me = null; S.modal = null;
+    go('nyito'); toast('Töröltük a fiókodat. A személyes adataidat 30 napon belül véglegesen töröljük vagy anonimizáljuk.');
+  },
+  newRoom: () => { S.editRoom = {isNew:true, v:{code:'', name:'', building:BUILDINGS[0], floor:'', cap:'', eq:[], open:480, close:1200, sat:false}}; render(); $('#rf-code').focus(); },
+  editRoom: d => { const r = roomById(Number(d.id)); S.editRoom = {isNew:false, id:r.id, v:{...r, eq:[...r.eq]}}; render(); window.scrollTo(0,0); },
+  cancelEdit: () => { S.editRoom = null; render(); },
+  askInactivate: d => { S.modal = {type:'inactivate', id:Number(d.id)}; render(); },
+  doInactivate: d => {
+    const r = roomById(Number(d.id)), list = futureActive(r);
+    list.forEach(b => { if (b.id.startsWith('g-')) S.cancelled[b.id] = true; else { const o = S.bookings.find(x => x.id === b.id); if (o) o.status = 'cancelled'; } });
+    r.active = false; S.modal = null;
+    if (list.length) mail(`${list.length} érintett hallgató`, `Lemondtuk a foglalásodat – ${r.code}`, `${art(r.code)} ${r.code} ${r.name} termet inaktiválták, ezért a jövőbeli foglalásodat lemondtuk. Foglalj másik termet a StudyRoomban.`);
+    toast(`${art(r.code)} ${r.code} terem inaktív. ${list.length} foglalást lemondtunk.`, 'ok'); render();
+  },
+  reactivate: d => { const r = roomById(Number(d.id)); r.active = true; toast(`${art(r.code)} ${r.code} terem újra látható a hallgatói listában.`, 'ok'); render(); },
+  preset: d => { S.stats.preset = d.v; if (d.v === 'custom'){ const [f,t] = [addDays(mondayOf(NOW_DAY),-7), addDays(mondayOf(NOW_DAY),-1)]; S.stats.from = S.stats.from || f; S.stats.to = S.stats.to || t; } render(); },
+  csv: () => { S.modal = {type:'csv'}; render(); },
+  copyCsv: () => {
+    const ta = $('#csv-text');
+    const fallback = () => { ta.focus(); ta.select(); toast('Jelöld ki és másold a szöveget (Ctrl+C).'); };
+    try { navigator.clipboard.writeText(ta.value).then(() => toast('A CSV tartalmát a vágólapra másoltuk.', 'ok'), fallback); } catch (e) { fallback(); }
+  },
+};
+
+const CH = {
+  jump: el => {
+    const j = JUMPS[Number(el.value)];
+    setRole(j[2]); S.clicksValid = false; S.mailOpen = false;
+    go(j[0]);
+    if (j[3] === 'k08'){
+      const r = roomById(1);
+      outer: for (let i = 0; i < 7; i++){ const k = addDays(NOW_DAY,i); for (let t = 480; t < 1200; t += 30){ const s = {roomId:1, day:k, start:t, dur:60}; if (!checkSel(s).length){ S.sel = s; break outer; } } }
+      S.weekOffset = 0; S.modal = {type:'confirm'}; render();
+    } else if (j[3] === 'k10'){
+      const b = upcoming()[0]; if (b){ S.modal = {type:'cancel', id:b.id}; render(); }
+    } else if (j[3] === 'k13'){ S.modal = {type:'inactivate', id: (activeRooms()[0] || S.rooms[0]).id}; render(); }
+  },
+  conflict: el => { S.simConflict = el.checked; if (el.checked) toast('A következő foglalás megerősítésekor ütközést szimulálunk (AC-05.2).'); },
+  selStart: el => { S.sel.start = Number(el.value); render(); },
+  selDur: el => { S.sel.dur = Number(el.value); render(); },
+  reminders: el => { user().reminders = el.checked; toast(el.checked ? 'Bekapcsoltad az emlékeztetőket.' : 'Kikapcsoltad az emlékeztetőket. A meglévő foglalásaidhoz sem küldünk.'); render(); },
+  langSel: el => { if (el.value === 'en'){ A.lang(); el.value = 'hu'; } },
+  statDate: () => { S.stats.preset = 'custom'; S.stats.from = $('#st-from').value; S.stats.to = $('#st-to').value; render(); },
+};
+
+const FORMS = {
+  reg: f => {
+    const v = {name:$('#reg-name').value.trim(), email:$('#reg-email').value.trim().toLowerCase(), pw:$('#reg-pw').value, pw2:$('#reg-pw2').value, gdpr:$('#reg-gdpr').checked};
+    const e = {};
+    if (!v.name) e.name = 'Add meg a teljes nevedet.';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) e.email = 'Adj meg egy érvényes e-mail-címet.';
+    else if (!/@([a-z0-9-]+\.)*nye\.hu$/.test(v.email)) e.email = 'Csak egyetemi e-mail-cím fogadható el';
+    else if (S.accounts[v.email] && !S.accounts[v.email].deleted) e.exists = true;
+    if (!pwRules(v.pw).every(x => x[2])) e.pw = 'A jelszó nem felel meg a fenti szabályoknak.';
+    if (v.pw2 !== v.pw) e.pw2 = 'A két jelszó nem egyezik.';
+    if (!v.gdpr) e.gdpr = 'A regisztrációhoz el kell fogadnod az adatkezelési tájékoztatót.';
+    S.regForm = v; S.regErrs = e;
+    if (Object.keys(e).length){ render(); const first = document.querySelector('.input.invalid'); first && first.focus(); return; }
+    S.accounts[v.email] = {name:v.name, pw:v.pw, role:'student', confirmed:false, reminders:true};
+    S.pending = v.email; S.regForm = null; S.regErrs = {};
+    mail(v.email, 'Erősítsd meg a regisztrációdat', `Szia ${v.name.split(' ').slice(-1)[0]}!\nKattints az alábbi linkre a StudyRoom-fiókod aktiválásához.`, {label:'Fiók megerősítése', act:'confirmReg', arg:v.email});
+    go('regisztracio-kesz');
+  },
+  login: () => {
+    if (S.locked) return;
+    const email = $('#login-email').value.trim().toLowerCase(), pw = $('#login-pw').value, a = S.accounts[email];
+    S.prefillEmail = email;
+    if (!a || a.deleted || a.pw !== pw){ S.fails++; if (S.fails >= 5) S.locked = true; S.loginErr = 'bad'; render(); return; }
+    if (!a.confirmed){ S.loginErr = 'unconfirmed'; render(); return; }
+    S.fails = 0; S.loginErr = null; S.me = email; S.prefillEmail = '';
+    go(home());
+  },
+  room: () => {
+    const e = S.editRoom;
+    const v = {code:$('#rf-code').value.trim(), name:$('#rf-name').value.trim(), building:$('#rf-building').value, floor:$('#rf-floor').value.trim() || 'földszint',
+      cap:$('#rf-cap').value, eq:[...document.querySelectorAll('[name=rf-eq]:checked')].map(x => x.value), open:Number($('#rf-open').value), close:Number($('#rf-close').value), sat:$('#rf-sat').checked};
+    const errs = {};
+    if (!v.code) errs.code = 'Add meg a teremkódot.';
+    else if (S.rooms.some(r => r.code.toLowerCase() === v.code.toLowerCase() && r.id !== e.id)) errs.code = 'Ilyen kódú terem már létezik.';
+    if (!v.name) errs.name = 'Add meg a terem nevét.';
+    const cap = Number(v.cap);
+    if (!Number.isInteger(cap) || cap < 1 || cap > 200) errs.cap = 'A férőhely 1 és 200 közötti egész szám legyen.';
+    e.v = v; e.errs = errs;
+    if (Object.keys(errs).length){ render(); return; }
+    v.cap = cap;
+    if (e.isNew){ S.rooms.push({...v, id:Math.max(...S.rooms.map(r => r.id)) + 1, active:true, custom:true}); toast(`Mentettük. ${art(v.code)} ${v.code} terem megjelent a hallgatói teremlistában.`, 'ok'); }
+    else { Object.assign(roomById(e.id), v); toast('Mentettük a módosításokat.', 'ok'); }
+    S.editRoom = null; render();
+  },
+};
+
+/* ---------- Eseménykezelés ---------- */
+document.addEventListener('click', e => {
+  if (roleOf() === 'student' && S.clicksValid && e.target.closest('#app button, #modal-root button, #app a')){
+    S.clicks++; const c = $('#pb-clicks'); if (c) c.textContent = S.clicks;
+  }
+}, true);
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]'); if (!el) return;
+  const fn = A[el.dataset.action]; if (!fn) return;
+  if (el.dataset.action === 'bgClose' && e.target !== el) return;
+  e.preventDefault(); fn(el.dataset, el, e);
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset && el.dataset.change && CH[el.dataset.change]) CH[el.dataset.change](el);
+  if (el.hasAttribute && el.hasAttribute('data-filter')) applyFilters();
+});
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.id === 'f-cap') applyFilters();
+  if (el.dataset && el.dataset.input === 'pw'){ $('#pwrules').innerHTML = pwRules(el.value).map(([k,l,ok]) => `<li class="${ok ? 'ok' : ''}">${l}</li>`).join(''); }
+});
+document.addEventListener('submit', e => { e.preventDefault(); const f = FORMS[e.target.dataset.form]; f && f(e.target); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (S.modal){ A.closeModal(); } else if (S.mailOpen){ A.mailClose(); }
+});
+function applyFilters(){
+  S.filters = {building:$('#f-building').value, minCap:$('#f-cap').value, eq:[...document.querySelectorAll('[name=f-eq]:checked')].map(x => x.value)};
+  $('#room-results').innerHTML = roomResults();
+  $('#room-count').textContent = countText();
+}
+window.addEventListener('hashchange', () => {
+  const h = location.hash.slice(1); if (!h || h === S.route) return;
+  S.route = h; S.modal = null; render();
+});
+
+/* Indulás: ha a link egy hallgatói vagy admin képernyőre mutat, a prototípus a megfelelő szerepkörrel nyílik meg */
+(function start(){
+  const h = location.hash.slice(1);
+  if (h){
+    const scr = h.startsWith('terem-') ? 'terem' : h;
+    const need = (ROUTES[scr] || {}).role;
+    if (need === 'student') setRole('student');
+    if (need === 'admin') setRole('admin');
+    S.route = h;
+  }
+  render();
+})();
+</script>
