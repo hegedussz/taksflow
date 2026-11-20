@@ -2,7 +2,7 @@
 
 Vizsgaidőszakban szinte lehetetlen szabad tanulószobát találni a campuson: az ember végigjárja az épületeket, és jó esetben a harmadik helyen talál egy üres asztalt. A **StudyRoom** ezen szeretne segíteni. Egy egyszerű webes felületen a hallgatók előre megnézhetik, melyik terem mikor szabad, és le is foglalhatják maguknak. Az adminisztrátorok ugyanitt kezelik a termeket, és statisztikákból látják, mennyire vannak kihasználva.
 
-> **A fejlesztés elkezdődött.** Működik az eduID-s (SAML2) bejelentkezés, a termek böngészése, a heti naptár, a foglalás és a lemondás, a saját foglalások, az emlékeztetők és a teremkezelés. Hátravan a statisztika és a CSV-export (FR-10), valamint a fióktörlés (NFR-04).
+> **A fejlesztés elkezdődött.** Működik az eduID-s (SAML2) bejelentkezés, a termek böngészése, a heti naptár, a foglalás és a lemondás, a saját foglalások, az emlékeztetők és a teremkezelés. Működik a kihasználtsági statisztika és a CSV-export is. Hátravan a fióktörlés (NFR-04).
 
 ## Mit tud majd az alkalmazás?
 

@@ -4,6 +4,7 @@ import { BookingService } from './bookingService.js';
 import type { Mailer } from './mailer.js';
 import { NotificationService } from './notificationService.js';
 import { RoomService } from './roomService.js';
+import { StatisticsService } from './statisticsService.js';
 import { UserService } from './userService.js';
 
 export interface Services {
@@ -11,6 +12,7 @@ export interface Services {
   rooms: RoomService;
   bookings: BookingService;
   notifications: NotificationService;
+  statistics: StatisticsService;
 }
 
 export function buildServices(pool: Pool, mailer: Mailer, baseUrl: string, clock: Clock): Services {
@@ -18,5 +20,5 @@ export function buildServices(pool: Pool, mailer: Mailer, baseUrl: string, clock
   const users = new UserService(pool);
   const rooms = new RoomService(pool, notifications, clock);
   const bookings = new BookingService(pool, rooms, notifications, clock);
-  return { users, rooms, bookings, notifications };
+  return { users, rooms, bookings, notifications, statistics: new StatisticsService(pool) };
 }

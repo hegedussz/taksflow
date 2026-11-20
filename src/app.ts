@@ -13,6 +13,7 @@ import { AppError, ForbiddenError, NotFoundError } from './domain/errors.js';
 import { toLocal, type Clock } from './domain/time.js';
 import type { Services } from './services/index.js';
 import type { Lang } from './services/userService.js';
+import { huDecimal } from './services/statisticsService.js';
 import { formatDate, formatDuration, formatRange, formatShortDate, formatTime } from './web/format.js';
 import { isLang, t } from './web/i18n.js';
 import { authRoutes } from './web/routes/auth.js';
@@ -51,6 +52,8 @@ export function createApp(deps: AppDeps): express.Express {
   env.addFilter('daynum', (d: Date) => toLocal(d).day);
   env.addFilter('monthshort', (d: Date, lang: Lang) => toLocal(d).setLocale(lang).toFormat('LLL').replace('.', ''));
   env.addFilter('weekday', (d: Date, lang: Lang) => toLocal(d).setLocale(lang).toFormat('cccc'));
+  env.addFilter('num1', (n: number, lang: Lang) => (lang === 'hu' ? huDecimal(Math.round(n * 10) / 10) : String(Math.round(n * 10) / 10)));
+  env.addFilter('barwidth', (n: number) => Math.max(0, Math.min(100, n)).toFixed(1));
   env.addFilter('duration', (m: number, lang: Lang) => formatDuration(m, lang));
   env.addGlobal('timerange', (a: Date, b: Date) => formatRange(a, b));
   app.set('view engine', 'njk');
@@ -148,7 +151,7 @@ export function createApp(deps: AppDeps): express.Express {
 
   app.use(authRoutes({ config, saml: deps.saml, passport: pp, sessionCookie: SESSION_COOKIE }));
   app.use('/api', apiRoutes({ services, clock: deps.clock }));
-  app.use('/admin', adminRoutes({ services }));
+  app.use('/admin', adminRoutes({ services, clock: deps.clock }));
   app.use(pageRoutes({ services, clock: deps.clock }));
 
   app.use((_req, _res, next) => next(new NotFoundError()));

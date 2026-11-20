@@ -1,0 +1,51 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('nav.admin_stats') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div class="sec-head flush">
+    <div><h1 class="h-page">{{ t('stats.title') }}</h1><p class="muted">{{ t('stats.lead') }}</p></div>
+    {% if report %}<a class="btn primary" href="/admin/stats.csv?{{ query }}" download>{{ t('stats.export') }}</a>{% endif %}
+  </div>
+
+  <form class="card period" method="get" action="/admin/stats">
+    <fieldset class="field plain">
+      <legend>{{ t('stats.period') }}</legend>
+      <span class="pseg">
+        {% for p in ['prevweek', 'last30', 'custom'] %}
+          <label><input type="radio" name="preset" value="{{ p }}" {% if range.preset == p %}checked{% endif %}><span>{{ t('stats.preset.' + p) }}</span></label>
+        {% endfor %}
+      </span>
+    </fieldset>
+    <div class="field"><label for="st-from">{{ t('stats.from') }}</label><input class="input" type="date" id="st-from" name="from" value="{{ range.from }}"></div>
+    <div class="field"><label for="st-to">{{ t('stats.to') }}</label><input class="input" type="date" id="st-to" name="to" value="{{ range.to }}"></div>
+    <div><button class="btn" type="submit">{{ t('stats.apply') }}</button></div>
+    <p class="small muted full">{{ t('stats.custom_note') }}</p>
+  </form>
+
+  {% if error %}
+    <div class="notice err" role="alert">{{ t(error) }}</div>
+  {% elif report.rows.length == 0 %}
+    <div class="card empty"><p class="muted">{{ t('stats.empty') }}</p></div>
+  {% else %}
+    <div class="kpis">
+      <div class="card kpi"><span class="eyebrow">{{ t('stats.avg') }}</span><b>{{ report.totals.percent | num1(lang) }}%</b><span class="small muted">{{ fromDate | shortdate(lang) }} – {{ toDate | shortdate(lang) }}</span></div>
+      <div class="card kpi"><span class="eyebrow">{{ t('stats.top') }}</span><b>{{ top.code }}</b><span class="small muted">{{ top.percent | num1(lang) }}% · {{ top.name }}</span></div>
+      <div class="card kpi"><span class="eyebrow">{{ t('stats.bookings') }}</span><b>{{ report.totals.bookings }}</b><span class="small muted">{{ t('stats.bookings_note') }}</span></div>
+      <div class="card kpi"><span class="eyebrow">{{ t('stats.hours') }}</span><b>{{ (report.totals.bookedMinutes / 60) | num1(lang) }}</b><span class="small muted">{{ t('stats.hours_of', { open: (report.totals.openMinutes / 60) | num1(lang) }) }}</span></div>
+    </div>
+
+    <section class="card stack tight" aria-labelledby="per-room">
+      <div class="sec-head flush"><h2 class="h-sm" id="per-room">{{ t('stats.per_room') }}</h2><span class="small muted">{{ t('stats.saturated_note') }}</span></div>
+      <ul class="bars">
+        {% for r in report.rows %}
+        <li class="bar-row">
+          <span class="bar-name"><b class="code">{{ r.code }}</b><span>{{ r.name }}{% if not r.active %} ({{ t('status.inactive') | lower }}){% endif %}</span></span>
+          <span class="bar-track" aria-hidden="true"><span class="bar-fill{% if r.percent >= 80 %} hot{% endif %}" style="width: {{ r.percent | barwidth }}%"></span></span>
+          <span class="bar-val"><b>{{ r.percent | num1(lang) }}%</b><span>{{ t('stats.hours_value', { booked: (r.bookedMinutes / 60) | num1(lang), open: (r.openMinutes / 60) | num1(lang) }) }}</span></span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}
