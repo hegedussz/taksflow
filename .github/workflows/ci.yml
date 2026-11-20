@@ -1,0 +1,100 @@
+name: CI/CD
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Lint, típusellenőrzés, tesztek
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: studyroom
+          POSTGRES_PASSWORD: studyroom
+          POSTGRES_DB: studyroom_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U studyroom -d studyroom_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgres://studyroom:studyroom@localhost:5432/studyroom_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Egységtesztek
+        run: npm run test:unit
+      - name: Integrációs tesztek (valódi PostgreSQL, ADR-0001)
+        run: npm run test:integration
+      - run: npm run build
+
+  e2e:
+    name: Docker compose + SAML-bejelentkezés (E2E)
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: A teljes rendszer indítása (NFR-08)
+        run: docker compose up -d --build --wait --wait-timeout 180
+      - name: Bejelentkezés a teszt-IdP-vel, foglalás, e-mail
+        run: python3 scripts/e2e_saml_login.py http://localhost:3000 http://localhost:8025
+      - name: Naplók hiba esetén
+        if: failure()
+        run: docker compose logs
+      - name: Leállítás
+        if: always()
+        run: docker compose down -v
+
+  image:
+    name: Docker-image (GHCR)
+    needs: [test, e2e]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Bejelentkezés a GitHub Container Registrybe
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+      - name: Build (main ágon push is)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
