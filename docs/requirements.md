@@ -24,6 +24,8 @@
 
 ### FR-01 – Regisztráció
 
+> **Módosítva ([ADR-0003](architecture/adr/0003-bejelentkezes-saml2-eduid.md)):** külön regisztráció nincs; a fiók az első eduID-s (SAML2) belépéskor automatikusan létrejön. Az AC-01.2 helyett: más intézmény felhasználóját a rendszer elutasítja. Az AC-01.3 tárgytalan.
+
 **Leírás:** Vendégként szeretnék regisztrálni az egyetemi e-mail-címemmel, hogy tanulószobát foglalhassak.
 
 **Elfogadási kritériumok:**
@@ -35,6 +37,8 @@
 ---
 
 ### FR-02 – Bejelentkezés és kijelentkezés
+
+> **Módosítva ([ADR-0003](architecture/adr/0003-bejelentkezes-saml2-eduid.md)):** a bejelentkezés eduID-val, SAML2-vel történik; a jelszót az egyetemi azonosítási szolgáltatás kéri be. Az AC-02.2 és AC-02.3 (hibaüzenet, zárolás) az identitásszolgáltató felelőssége, az AC-02.1 és AC-02.4 változatlan.
 
 **Leírás:** Hallgatóként szeretnék be- és kijelentkezni, hogy a foglalásaimat csak én kezelhessem.
 
@@ -169,6 +173,9 @@ A rendszernek legalább **500 egyidejű felhasználót** kell kiszolgálnia úgy
 A jelszavakat tilos nyílt szövegként tárolni; **bcrypt (cost ≥ 12)** vagy **Argon2id** algoritmussal kell hash-elni őket. A jelszó legalább 10 karakter hosszú, és tartalmaz betűt és számjegyet. Minden kommunikáció **HTTPS-en (TLS 1.2+)** történik.
 
 **Ellenőrzés:** Kódáttekintés; az adatbázisban kizárólag hash-ek láthatók.
+
+> **Módosítva ([ADR-0003](architecture/adr/0003-bejelentkezes-saml2-eduid.md)):** az eduID-s bejelentkezés miatt a StudyRoom nem tárol jelszót; a HTTPS (TLS 1.2+) követelmény változatlan.
+
 
 ### NFR-04 – Adatvédelem (GDPR) *(Biztonság)*
 

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Állapot** | Javasolt |
+| **Állapot** | Elfogadott (megvalósítva: `migrations/001_kezdeti_sema.sql`) |
 | **Dátum** | 2026-10-03 |
 | **Érintett követelmények** | FR-05 (AC-05.1, AC-05.2, AC-05.3), FR-06, FR-09 (AC-09.2), NFR-02 |
 

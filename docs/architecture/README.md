@@ -12,4 +12,6 @@ A diagramok forrása a `.drawio` fájl, amely a [draw.io](https://app.diagrams.n
 
 | Azonosító | Cím | Állapot |
 |---|---|---|
-| [ADR-0001](adr/0001-foglalasi-utkozesek-kezelese.md) | Foglalási ütközések megakadályozása adatbázis-szintű kizárási megkötéssel | Javasolt |
+| [ADR-0001](adr/0001-foglalasi-utkozesek-kezelese.md) | Foglalási ütközések megakadályozása adatbázis-szintű kizárási megkötéssel | Elfogadott |
+| [ADR-0002](adr/0002-technologiai-stack.md) | Technológiai stack | Elfogadott |
+| [ADR-0003](adr/0003-bejelentkezes-saml2-eduid.md) | Bejelentkezés SAML2-vel az eduID.hu föderáción keresztül | Elfogadott |
