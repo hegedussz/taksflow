@@ -1,0 +1,37 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('admin.edit_room') if id else t('admin.new_room') }}{% endblock %}
+{% block content %}
+<form class="card form" method="post" action="{{ '/admin/rooms/' + id if id else '/admin/rooms' }}" novalidate>
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+  <div class="sec-head flush"><h1 class="h-page">{{ t('admin.edit_room') if id else t('admin.new_room') }}</h1><a class="btn ghost" href="/admin/rooms">{{ t('admin.cancel') }}</a></div>
+  {% if errors | length %}<div class="notice err" role="alert">{{ t('admin.fix_errors') }}</div>{% endif %}
+  <div class="two">
+    <div class="field"><label for="rf-code">{{ t('admin.col.code') }}</label><input class="input{% if errors.code %} invalid{% endif %}" id="rf-code" name="code" value="{{ values.code }}" maxlength="20" required>{% if errors.code %}<span class="err-text">{{ t(errors.code) }}</span>{% endif %}</div>
+    <div class="field"><label for="rf-name">{{ t('admin.col.name') }}</label><input class="input{% if errors.name %} invalid{% endif %}" id="rf-name" name="name" value="{{ values.name }}" maxlength="100" required>{% if errors.name %}<span class="err-text">{{ t(errors.name) }}</span>{% endif %}</div>
+    <div class="field"><label for="rf-building">{{ t('rooms.building') }}</label>
+      <select class="input{% if errors.buildingId %} invalid{% endif %}" id="rf-building" name="buildingId">
+        <option value="">–</option>{% for b in buildings %}<option value="{{ b.id }}" {% if values.buildingId == b.id | string %}selected{% endif %}>{{ b.name }}</option>{% endfor %}
+      </select>{% if errors.buildingId %}<span class="err-text">{{ t(errors.buildingId) }}</span>{% endif %}</div>
+    <div class="field"><label for="rf-floor">{{ t('admin.floor') }}</label><input class="input" id="rf-floor" name="floor" value="{{ values.floor }}" maxlength="50"></div>
+    <div class="field"><label for="rf-cap">{{ t('admin.col.capacity') }}</label><input class="input{% if errors.capacity %} invalid{% endif %}" id="rf-cap" name="capacity" type="number" min="1" max="200" value="{{ values.capacity }}">{% if errors.capacity %}<span class="err-text">{{ t(errors.capacity) }}</span>{% endif %}</div>
+  </div>
+  <fieldset class="field plain"><legend>{{ t('rooms.equipment') }}</legend>
+    <div class="eq-grid">{% for e in equipment %}<label class="check"><input type="checkbox" name="equipment" value="{{ e.code }}" {% if e.code in values.equipment %}checked{% endif %}> {{ e.nameHu if lang == 'hu' else e.nameEn }}</label>{% endfor %}</div>
+  </fieldset>
+  <fieldset class="field plain"><legend>{{ t('admin.hours') }}</legend>
+    {% if errors.hours %}<span class="err-text">{{ t(errors.hours) }}</span>{% endif %}
+    <div class="hours">
+    {% for d in values.days %}
+      <div class="hours-row">
+        <label class="check"><input type="checkbox" name="open_{{ d.weekday }}" {% if d.open %}checked{% endif %}> {{ t('weekday.' + d.weekday) }}</label>
+        <label class="sr" for="opens_{{ d.weekday }}">{{ t('admin.opens') }}</label><input class="input time" id="opens_{{ d.weekday }}" name="opens_{{ d.weekday }}" value="{{ d.opens }}" pattern="[0-2][0-9]:[0-5][0-9]" inputmode="numeric">
+        <span aria-hidden="true">–</span>
+        <label class="sr" for="closes_{{ d.weekday }}">{{ t('admin.closes') }}</label><input class="input time" id="closes_{{ d.weekday }}" name="closes_{{ d.weekday }}" value="{{ d.closes }}" pattern="[0-2][0-9]:[0-5][0-9]" inputmode="numeric">
+      </div>
+    {% endfor %}
+    </div>
+    <p class="small muted">{{ t('admin.hours_note') }}</p>
+  </fieldset>
+  <div><button class="btn primary" type="submit">{{ t('admin.save') }}</button></div>
+</form>
+{% endblock %}

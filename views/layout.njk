@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{% endblock %} · StudyRoom</title>
+<link rel="stylesheet" href="/static/css/app.css">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#main">{{ t('nav.skip') }}</a>
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a class="logo" href="/">
+      <svg viewBox="0 0 26 26" aria-hidden="true"><rect class="lm-frame" x="2" y="2" width="22" height="22" rx="5"/><line class="lm-line" x1="2" y1="9" x2="24" y2="9"/><rect class="lm-slot" x="7" y="12" width="12" height="7" rx="1.5"/></svg>
+      StudyRoom
+    </a>
+    {% if user %}
+    <nav class="nav" aria-label="{{ t('nav.label') }}">
+      {% if user.role == 'admin' %}
+        <a href="/admin/rooms" {% if path.startsWith('/admin') %}aria-current="page"{% endif %}>{{ t('nav.admin_rooms') }}</a>
+        <a href="/rooms" {% if path.startsWith('/rooms') %}aria-current="page"{% endif %}>{{ t('nav.rooms') }}</a>
+      {% else %}
+        <a href="/" {% if path == '/' %}aria-current="page"{% endif %}>{{ t('nav.home') }}</a>
+        <a href="/rooms" {% if path.startsWith('/rooms') %}aria-current="page"{% endif %}>{{ t('nav.rooms') }}</a>
+        <a href="/my/bookings" {% if path.startsWith('/my') %}aria-current="page"{% endif %}>{{ t('nav.my_bookings') }}</a>
+        <a href="/profile" {% if path.startsWith('/profile') %}aria-current="page"{% endif %}>{{ t('nav.profile') }}</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+    <div class="hdr-end">
+      <span class="lang" role="group" aria-label="{{ t('nav.language') }}">
+        <a href="{{ langUrl('hu') }}" lang="hu" {% if lang == 'hu' %}aria-current="true"{% endif %}>HU</a><a href="{{ langUrl('en') }}" lang="en" {% if lang == 'en' %}aria-current="true"{% endif %}>EN</a>
+      </span>
+      {% if user %}
+        <span class="who"><b>{{ user.displayName }}</b>{{ t('role.' + user.role) }}</span>
+        <form method="post" action="/logout">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+          <button class="btn sm" type="submit">{{ t('nav.logout') }}</button>
+        </form>
+      {% else %}
+        <a class="btn sm primary" href="/login">{{ t('nav.login') }}</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+<main id="main" class="wrap">
+{% block content %}{% endblock %}
+</main>
+<footer class="ftr wrap"><p class="muted small">{{ t('footer.text') }}</p></footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

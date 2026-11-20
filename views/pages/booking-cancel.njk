@@ -1,0 +1,21 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('cancel.title') }}{% endblock %}
+{% block content %}
+<div class="narrow"><div class="card stack">
+  <h1 class="h-page">{{ t('cancel.title') }}</h1>
+  <dl class="sum">
+    <dt>{{ t('confirm.room') }}</dt><dd><b>{{ b.roomCode }}</b> · {{ b.roomName }}</dd>
+    <dt>{{ t('confirm.when') }}</dt><dd>{{ b.start | date(lang) }}<br><b class="mono">{{ timerange(b.start, b.end) }}</b></dd>
+  </dl>
+  {% if late %}
+    <div class="notice warn">{{ t('cancel.late_warning', { n: minutesLeft if minutesLeft > 0 else 0 }) }}</div>
+  {% else %}
+    <div class="notice info">{{ t('cancel.info') }}</div>
+  {% endif %}
+  <form method="post" action="/bookings/{{ b.id }}/cancel" class="actions">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <a class="btn" href="/my/bookings">{{ t('cancel.keep') }}</a>
+    <button class="btn danger" type="submit">{{ t('cancel.submit') }}</button>
+  </form>
+</div></div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('nav.my_bookings') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div class="sec-head flush"><div><h1 class="h-page">{{ t('my.title') }}</h1><p class="muted">{{ t('my.limit_note') }}</p></div>{% include "partials/quota.njk" %}</div>
+  {% if cancelled == 'late' %}<div class="notice ok" role="status">{{ t('my.cancelled_late') }}</div>{% elif cancelled %}<div class="notice ok" role="status">{{ t('my.cancelled') }}</div>{% endif %}
+  <nav class="tabs" aria-label="{{ t('my.title') }}">
+    <a href="/my/bookings" {% if tab == 'upcoming' %}aria-current="page"{% endif %}>{{ t('my.upcoming', { n: upcoming.length }) }}</a>
+    <a href="/my/bookings?tab=history" {% if tab == 'history' %}aria-current="page"{% endif %}>{{ t('my.history') }}</a>
+  </nav>
+  <div class="blist">
+  {% if tab == 'upcoming' %}
+    {% for b in upcoming %}{% set actions = true %}{% include "partials/booking-row.njk" %}{% else %}
+      <div class="card empty"><h2 class="h-sm">{{ t('my.none_upcoming') }}</h2><a class="btn primary" href="/rooms">{{ t('dash.cta_button') }}</a></div>
+    {% endfor %}
+  {% else %}
+    <p class="small muted">{{ t('my.history_note') }}</p>
+    {% for b in history %}{% set actions = false %}{% include "partials/booking-row.njk" %}{% else %}
+      <div class="card empty"><p class="muted">{{ t('my.none_history') }}</p></div>
+    {% endfor %}
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

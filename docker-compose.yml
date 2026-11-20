@@ -1,0 +1,70 @@
+# A teljes fejlesztői rendszer egy paranccsal: docker compose up --build  (NFR-08)
+#   Alkalmazás:      http://localhost:3000
+#   Teszt-IdP:       http://localhost:8080  (felhasználók: dev/idp/authsources.php)
+#   Kimenő levelek:  http://localhost:8025  (Mailpit)
+name: studyroom
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: studyroom
+      POSTGRES_USER: studyroom
+      POSTGRES_PASSWORD: studyroom
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U studyroom -d studyroom"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Fejlesztői SAML2 IdP az eduID helyett (SimpleSAMLphp). Élesben az eduID.hu föderáció IdP-je.
+  idp:
+    image: kenchan0130/simplesamlphp@sha256:3c6ed4b8c6bdc86bb131c802ddc35f6311cb91df7f8412f50b8f159c4c19fab0
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: http://localhost:3000/saml/metadata
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://localhost:3000/saml/acs
+    volumes:
+      - ./dev/idp/authsources.php:/var/www/simplesamlphp/config/authsources.php:ro
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  mailpit:
+    image: axllent/mailpit:v1.34.0
+    ports:
+      - "127.0.0.1:8025:8025"
+
+  app:
+    build: .
+    image: studyroom:dev
+    depends_on:
+      db:
+        condition: service_healthy
+      idp:
+        condition: service_started
+      mailpit:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      BASE_URL: http://localhost:3000
+      DATABASE_URL: postgres://studyroom:studyroom@db:5432/studyroom
+      SESSION_SECRET: ${SESSION_SECRET:-csak-fejleszteshez-hasznalt-munkamenet-titok}
+      COOKIE_SECURE: "false"
+      SMTP_URL: smtp://mailpit:1025
+      MAIL_FROM: StudyRoom <noreply@studyroom.local>
+      SEED_DEMO_DATA: "true"
+      SAML_IDP_SSO_URL: http://localhost:8080/simplesaml/saml2/idp/SSOService.php
+      SAML_IDP_ENTITY_ID: http://localhost:8080/simplesaml/saml2/idp/metadata.php
+      SAML_IDP_CERT_FILE: /run/idp/idp-signing.crt
+      ALLOWED_SCOPES: nye.hu
+      ADMIN_EPPNS: szabo.marta@nye.hu
+    volumes:
+      - ./dev/idp/idp-signing.crt:/run/idp/idp-signing.crt:ro
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  dbdata:

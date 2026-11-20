@@ -1,0 +1,10 @@
+{% extends "layout.njk" %}
+{% block title %}{{ status }}{% endblock %}
+{% block content %}
+<div class="card forbidden">
+  <span class="big">{{ status }}</span>
+  <h1 class="h-page">{{ t('error.title.' + status) if status in [400, 403, 404, 409, 422] else t('error.title.500') }}</h1>
+  <p class="muted">{{ t(code) }}</p>
+  <a class="btn primary" href="/">{{ t('error.home') }}</a>
+</div>
+{% endblock %}

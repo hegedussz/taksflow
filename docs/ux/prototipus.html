@@ -1,4 +1,8 @@
+<!doctype html>
+<html lang="hu">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>StudyRoom prototípus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +74,10 @@
 }
 
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0;letter-spacing:-.01em;font-weight:700}
@@ -371,7 +379,8 @@ tr.inactive td{color:var(--muted)}
 .wf .cell.busy,.wf .sw.busy{background:var(--busy)}
 .wf .cal-closed{background:var(--closed)}
 </style>
-
+</head>
+<body>
 <div class="pbar" id="pbar"></div>
 <header class="hdr" id="hdr"></header>
 <main id="app"></main>
@@ -1309,3 +1318,5 @@ window.addEventListener('hashchange', () => {
   render();
 })();
 </script>
+</body>
+</html>

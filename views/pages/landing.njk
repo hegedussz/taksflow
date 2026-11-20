@@ -1,0 +1,18 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('landing.title') }}{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">{{ t('landing.eyebrow') }}</p>
+    <h1>{{ t('landing.h1a') }} <span class="hl">{{ t('landing.h1b') }}</span></h1>
+    <p class="lead">{{ t('landing.lead') }}</p>
+    <div class="row"><a class="btn primary lg" href="/login">{{ t('landing.login') }}</a></div>
+    <p class="muted small">{{ t('landing.eduid_note') }}</p>
+  </div>
+</section>
+<section class="steps">
+  <div class="card step"><span class="step-n">1.</span><h2 class="h-sm">{{ t('landing.step1.title') }}</h2><p class="muted">{{ t('landing.step1.text') }}</p></div>
+  <div class="card step"><span class="step-n">2.</span><h2 class="h-sm">{{ t('landing.step2.title') }}</h2><p class="muted">{{ t('landing.step2.text') }}</p></div>
+  <div class="card step"><span class="step-n">3.</span><h2 class="h-sm">{{ t('landing.step3.title') }}</h2><p class="muted">{{ t('landing.step3.text') }}</p></div>
+</section>
+{% endblock %}

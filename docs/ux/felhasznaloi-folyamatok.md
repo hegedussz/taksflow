@@ -53,6 +53,8 @@ A folyamatábrákon a lekerekített téglalap a kezdő- és végpont, a téglala
 
 ## UF-01 – Regisztráció és bejelentkezés
 
+> **Módosítva ([ADR-0003](../architecture/adr/0003-bejelentkezes-saml2-eduid.md)):** a megvalósításban nincs külön regisztráció és jelszó. A „Belépés eduID-val” gomb az egyetemi azonosítási oldalra visz, sikeres belépés után a felhasználó a K-05 Kezdőlapra kerül, a fiók pedig az első belépéskor jön létre. Más intézmény felhasználója 403-as „A belépés nem sikerült” oldalt kap. Az alábbi leírás és a prototípus K-02 – K-04 képernyője az eredeti, jelszavas tervet mutatja.
+
 | | |
 |---|---|
 | **Szereplő** | Vendég, aki ezután Hallgató lesz |
