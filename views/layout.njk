@@ -18,7 +18,8 @@
     {% if user %}
     <nav class="nav" aria-label="{{ t('nav.label') }}">
       {% if user.role == 'admin' %}
-        <a href="/admin/rooms" {% if path.startsWith('/admin') %}aria-current="page"{% endif %}>{{ t('nav.admin_rooms') }}</a>
+        <a href="/admin/rooms" {% if path.startsWith('/admin/rooms') %}aria-current="page"{% endif %}>{{ t('nav.admin_rooms') }}</a>
+        <a href="/admin/stats" {% if path.startsWith('/admin/stats') %}aria-current="page"{% endif %}>{{ t('nav.admin_stats') }}</a>
         <a href="/rooms" {% if path.startsWith('/rooms') %}aria-current="page"{% endif %}>{{ t('nav.rooms') }}</a>
       {% else %}
         <a href="/" {% if path == '/' %}aria-current="page"{% endif %}>{{ t('nav.home') }}</a>

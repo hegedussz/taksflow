@@ -2,13 +2,15 @@ import { Router } from 'express';
 import { requireAdmin } from '../../auth/guards.js';
 import { AppError, NotFoundError } from '../../domain/errors.js';
 import type { OpeningHours } from '../../domain/rules.js';
-import { SLOT_MINUTES, minutesToTime, timeToMinutes } from '../../domain/time.js';
+import { SLOT_MINUTES, minutesToTime, timeToMinutes, type Clock } from '../../domain/time.js';
 import type { Services } from '../../services/index.js';
+import { csvFilename, formatUtilizationCsv, resolveRange } from '../../services/statisticsService.js';
 import type { Room, RoomInput } from '../../services/roomService.js';
 import { ah, arrayParam, intParam } from './util.js';
 
 interface Deps {
   services: Services;
+  clock: Clock;
 }
 
 export const WEEKDAYS = [1, 2, 3, 4, 5, 6, 7] as const;
@@ -25,8 +27,8 @@ export interface RoomFormValues {
 }
 
 /** FR-09: termek kezelése (K-12, K-13). Minden útvonal adminisztrátori jogot kér (AC-09.3). */
-export function adminRoutes({ services }: Deps): Router {
-  const { rooms } = services;
+export function adminRoutes({ services, clock }: Deps): Router {
+  const { rooms, statistics } = services;
   const r = Router();
   r.use(requireAdmin);
 
@@ -108,6 +110,43 @@ export function adminRoutes({ services }: Deps): Router {
     ah(async (req, res) => {
       await rooms.activate(Number(req.params.id));
       res.redirect(303, '/admin/rooms?activated=1');
+    }),
+  );
+
+  // FR-10: kihasználtsági statisztika (K-14) és CSV-export
+  r.get(
+    '/stats',
+    ah(async (req, res) => {
+      const q = req.query;
+      let range;
+      try {
+        range = resolveRange(q.preset, q.from, q.to, clock());
+      } catch (err) {
+        if (!(err instanceof AppError)) throw err;
+        return res.status(422).render('admin/stats.njk', {
+          error: err.code,
+          range: { preset: 'custom', from: String(q.from ?? ''), to: String(q.to ?? '') },
+        });
+      }
+      const report = await statistics.utilization(range.from, range.to);
+      const query = new URLSearchParams({ preset: range.preset, from: range.from, to: range.to }).toString();
+      res.render('admin/stats.njk', {
+        range,
+        report,
+        query,
+        fromDate: new Date(`${range.from}T12:00:00Z`),
+        toDate: new Date(`${range.to}T12:00:00Z`),
+        top: report.rows[0],
+      });
+    }),
+  );
+
+  r.get(
+    '/stats.csv',
+    ah(async (req, res) => {
+      const range = resolveRange(req.query.preset, req.query.from, req.query.to, clock());
+      const report = await statistics.utilization(range.from, range.to);
+      res.type('text/csv; charset=utf-8').attachment(csvFilename(report)).send(formatUtilizationCsv(report));
     }),
   );
 

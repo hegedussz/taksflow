@@ -83,9 +83,17 @@ messages = json.load(urllib.request.urlopen(f"{MAILPIT}/api/v1/messages"))["mess
 assert any("Foglalás visszaigazolása" in m["Subject"] for m in messages), "Nem érkezett visszaigazoló e-mail"
 print("OK  a visszaigazoló e-mail megérkezett a Mailpitbe")
 
-status, page, _ = login("admin1", "password")
+status, page, admin = login("admin1", "password")
 assert status == 200 and "Termek kezelése" in page, f"Admin belépés sikertelen ({status})"
 print("OK  adminisztrátor belépett, teremkezelés")
+
+# FR-10: statisztika a demóadatok két hetére és CSV-export
+period = f"preset=custom&from={datetime.date.today().isoformat()}&to={(datetime.date.today() + datetime.timedelta(days=14)).isoformat()}"
+stats = admin.open(f"{APP}/admin/stats?{period}").read().decode()
+assert "Kihasználtság termenként" in stats, "A statisztika oldal nem jelent meg"
+csv = admin.open(f"{APP}/admin/stats.csv?{period}").read().decode("utf-8-sig")
+assert csv.startswith("terem_kod;") and "\nA/104;" in csv, "Hibás CSV-export"
+print("OK  statisztika és CSV-export (FR-10)")
 
 status, page, _ = login("kulsos", "password")
 assert status == 403 and "egyetemi eduID-fiókkal" in page, f"Külsős felhasználót nem utasította el ({status})"
