@@ -1,0 +1,33 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('nav.profile') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <h1 class="h-page">{{ t('profile.title') }}</h1>
+  {% if saved %}<div class="notice ok" role="status">{{ t('profile.saved') }}</div>{% endif %}
+  <div class="prof">
+    <section class="card stack tight">
+      <h2 class="h-sm">{{ t('profile.account') }}</h2>
+      <dl class="kv">
+        <dt>{{ t('profile.name') }}</dt><dd>{{ user.displayName }}</dd>
+        <dt>{{ t('profile.email') }}</dt><dd class="mono small">{{ user.email }}</dd>
+        <dt>{{ t('profile.eppn') }}</dt><dd class="mono small">{{ user.eppn }}</dd>
+        <dt>{{ t('profile.role') }}</dt><dd>{{ t('role.' + user.role) }}</dd>
+      </dl>
+      <p class="small muted">{{ t('profile.eduid_note') }}</p>
+    </section>
+    <form class="card stack tight" method="post" action="/profile">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <h2 class="h-sm">{{ t('profile.settings') }}</h2>
+      <label class="switch" for="prof-rem"><input type="checkbox" id="prof-rem" name="reminders" {% if user.remindersEnabled %}checked{% endif %}><span class="track"></span><span><b>{{ t('profile.reminders') }}</b><br><span class="small muted">{{ t('profile.reminders_note') }}</span></span></label>
+      <div class="field"><label for="prof-lang">{{ t('profile.lang') }}</label>
+        <select class="input" id="prof-lang" name="lang"><option value="hu" {% if user.lang == 'hu' %}selected{% endif %}>Magyar</option><option value="en" {% if user.lang == 'en' %}selected{% endif %}>English</option></select></div>
+      <div><button class="btn primary" type="submit">{{ t('profile.save') }}</button></div>
+    </form>
+    <section class="card stack tight">
+      <h2 class="h-sm">{{ t('profile.data') }}</h2>
+      <p class="muted small">{{ t('profile.data_note') }}</p>
+      <div><a class="btn" href="/profile/export">{{ t('profile.export') }}</a></div>
+    </section>
+  </div>
+</div>
+{% endblock %}

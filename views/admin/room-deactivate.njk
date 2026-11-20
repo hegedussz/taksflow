@@ -1,0 +1,14 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('admin.deactivate') }}{% endblock %}
+{% block content %}
+<div class="narrow"><div class="card stack">
+  <h1 class="h-page">{{ t('admin.deactivate_title', { code: room.code }) }}</h1>
+  <p>{{ t('admin.deactivate_text') }}</p>
+  {% if count %}<div class="notice warn">{{ t('admin.deactivate_count', { n: count }) }}</div>{% else %}<div class="notice info">{{ t('admin.deactivate_none') }}</div>{% endif %}
+  <form method="post" action="/admin/rooms/{{ room.id }}/deactivate" class="actions">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <a class="btn" href="/admin/rooms">{{ t('admin.cancel') }}</a>
+    <button class="btn danger" type="submit">{{ t('admin.deactivate_submit') if count else t('admin.deactivate') }}</button>
+  </form>
+</div></div>
+{% endblock %}

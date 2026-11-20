@@ -1,0 +1,44 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('nav.rooms') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div><h1 class="h-page">{{ t('rooms.title') }}</h1><p class="muted">{{ t('rooms.count', { n: rooms.length }) }}</p></div>
+  <div class="rooms-layout">
+    <form class="card filters" method="get" action="/rooms" aria-label="{{ t('rooms.filter') }}">
+      <h2 class="h-sm">{{ t('rooms.filter') }}</h2>
+      <div class="field"><label for="f-building">{{ t('rooms.building') }}</label>
+        <select class="input" id="f-building" name="building">
+          <option value="">{{ t('rooms.all_buildings') }}</option>
+          {% for b in buildings %}<option value="{{ b.id }}" {% if filter.buildingId == b.id %}selected{% endif %}>{{ b.name }}</option>{% endfor %}
+        </select></div>
+      <div class="field"><label for="f-cap">{{ t('rooms.min_capacity') }}</label>
+        <input class="input" id="f-cap" name="capacity" type="number" min="1" max="200" inputmode="numeric" value="{{ filter.minCapacity or '' }}"></div>
+      <fieldset class="field plain"><legend>{{ t('rooms.equipment') }}</legend>
+        {% for e in equipment %}
+          <label class="check"><input type="checkbox" name="equipment" value="{{ e.code }}" {% if e.code in filter.equipment %}checked{% endif %}> {{ e.nameHu if lang == 'hu' else e.nameEn }}</label>
+        {% endfor %}
+      </fieldset>
+      <div class="row"><button class="btn primary" type="submit">{{ t('rooms.apply') }}</button><a class="btn ghost" href="/rooms">{{ t('rooms.clear') }}</a></div>
+    </form>
+    <div>
+      {% if rooms.length %}
+      <ul class="room-grid">
+        {% for r in rooms %}
+        <li><a class="room-card card" href="/rooms/{{ r.id }}">
+          <span class="rc-top"><span class="code">{{ r.code }}</span><span class="chip">{{ t('rooms.capacity', { n: r.capacity }) }}</span></span>
+          <span class="rc-title">{{ r.name }}</span>
+          <span class="rc-meta">{{ r.buildingName }}{% if r.floor %} · {{ r.floor }}{% endif %}</span>
+          <span class="chips">{% for e in r.equipment %}<span class="chip">{{ e.nameHu if lang == 'hu' else e.nameEn }}</span>{% endfor %}</span>
+        </a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <div class="card empty" role="status">
+        <h2 class="h-sm">{{ t('rooms.empty') if filtered else t('rooms.none') }}</h2>
+        {% if filtered %}<p class="muted">{{ t('rooms.empty_hint') }}</p><a class="btn" href="/rooms">{{ t('rooms.clear') }}</a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('nav.admin_rooms') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div class="sec-head flush"><h1 class="h-page">{{ t('admin.rooms_title') }}</h1><a class="btn primary" href="/admin/rooms/new">{{ t('admin.new_room') }}</a></div>
+  {% if saved %}<div class="notice ok" role="status">{{ t('admin.saved', { code: saved }) }}</div>{% endif %}
+  {% if deactivated %}<div class="notice ok" role="status">{{ t('admin.deactivated', { n: deactivated }) }}</div>{% endif %}
+  {% if activated %}<div class="notice ok" role="status">{{ t('admin.activated') }}</div>{% endif %}
+  <section class="card flush-pad"><div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th scope="col">{{ t('admin.col.code') }}</th><th scope="col">{{ t('admin.col.name') }}</th><th scope="col">{{ t('rooms.building') }}</th><th scope="col">{{ t('admin.col.capacity') }}</th><th scope="col">{{ t('rooms.equipment') }}</th><th scope="col">{{ t('admin.col.status') }}</th><th scope="col"><span class="sr">{{ t('admin.col.actions') }}</span></th></tr></thead>
+    <tbody>
+    {% for r in rooms %}
+      <tr class="{% if not r.active %}inactive{% endif %}">
+        <td class="code">{{ r.code }}</td><td>{{ r.name }}</td><td>{{ r.buildingName }}</td><td class="num">{{ r.capacity }}</td>
+        <td><span class="chips">{% for e in r.equipment %}<span class="chip">{{ e.nameHu if lang == 'hu' else e.nameEn }}</span>{% endfor %}</span></td>
+        <td>{% if r.active %}<span class="chip ok">{{ t('status.active') }}</span>{% else %}<span class="chip">{{ t('status.inactive') }}</span>{% endif %}</td>
+        <td><span class="row nowrap">
+          <a class="btn sm" href="/admin/rooms/{{ r.id }}/edit">{{ t('admin.edit') }}</a>
+          {% if r.active %}<a class="btn sm" href="/admin/rooms/{{ r.id }}/deactivate">{{ t('admin.deactivate') }}</a>
+          {% else %}<form method="post" action="/admin/rooms/{{ r.id }}/activate"><input type="hidden" name="_csrf" value="{{ csrfToken }}"><button class="btn sm" type="submit">{{ t('admin.activate') }}</button></form>{% endif %}
+        </span></td>
+      </tr>
+    {% endfor %}
+    </tbody></table></div></section>
+</div>
+{% endblock %}

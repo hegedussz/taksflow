@@ -1,0 +1,24 @@
+<div class="card brow">
+  <div class="datebox"><b>{{ b.start | daynum }}</b><span>{{ b.start | monthshort(lang) }}</span></div>
+  <div class="bt">
+    <div><b>{{ b.roomCode }}</b> · {{ b.roomName }}</div>
+    <div class="small muted">{{ b.start | date(lang) }}, <span class="mono">{{ timerange(b.start, b.end) }}</span> · {{ b.buildingName }}{% if b.floor %}, {{ b.floor }}{% endif %}</div>
+    <div class="chips">
+      {% if b.status == 'cancelled' %}
+        <span class="chip">{{ t('status.cancelled') }}</span>{% if b.lateCancellation %}<span class="chip warn">{{ t('status.late') }}</span>{% endif %}
+      {% elif b.end <= now %}
+        <span class="chip">{{ t('status.finished') }}</span>
+      {% elif b.start <= now %}
+        <span class="chip ok">{{ t('status.ongoing') }}</span>
+      {% else %}
+        <span class="chip ok">{{ t('status.active') }}</span>
+      {% endif %}
+    </div>
+  </div>
+  {% if actions and b.status == 'active' and b.end > now %}
+  <div class="acts">
+    <a class="btn sm" href="/rooms/{{ b.roomId }}">{{ t('my.calendar') }}</a>
+    <a class="btn sm" href="/bookings/{{ b.id }}/cancel">{{ t('my.cancel') }}</a>
+  </div>
+  {% endif %}
+</div>

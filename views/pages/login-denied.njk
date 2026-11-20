@@ -1,0 +1,10 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('denied.title') }}{% endblock %}
+{% block content %}
+<div class="card forbidden">
+  <span class="big">403</span>
+  <h1 class="h-page">{{ t('denied.title') }}</h1>
+  <p class="muted">{{ t('denied.' + reason) }}</p>
+  <a class="btn primary" href="/">{{ t('error.home') }}</a>
+</div>
+{% endblock %}

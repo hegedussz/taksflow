@@ -1,0 +1,83 @@
+{% extends "layout.njk" %}
+{% block title %}{{ room.code }} {{ room.name }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div><a class="btn ghost sm" href="/rooms">‹ {{ t('room.back') }}</a></div>
+  <section class="card room-head">
+    <div class="row"><span class="code lg">{{ room.code }}</span>{% if not room.active %}<span class="chip">{{ t('status.inactive') }}</span>{% endif %}</div>
+    <h1 class="h-page">{{ room.name }}</h1>
+    <p class="muted">{{ room.buildingName }}{% if room.floor %}, {{ room.floor }}{% endif %} · {{ t('rooms.capacity', { n: room.capacity }) }}</p>
+    <div class="chips">{% for e in room.equipment %}<span class="chip">{{ e.nameHu if lang == 'hu' else e.nameEn }}</span>{% endfor %}</div>
+  </section>
+
+  {% if booked %}
+  <div class="notice ok" role="status"><b>{{ t('booking.success') }}</b> {{ booked.start | date(lang) }}, <span class="mono">{{ timerange(booked.start, booked.end) }}</span>. {{ t('booking.success_mail') }}</div>
+  {% endif %}
+  {% if error %}
+  <div class="notice err" role="alert"><b>{{ t(error) }}</b>{% if error == 'error.slot_unavailable' %} {{ t('booking.slot_unavailable_hint') }}{% elif error == 'error.booking_limit' %} <a href="/my/bookings">{{ t('nav.my_bookings') }}</a>{% endif %}</div>
+  {% endif %}
+
+  <div class="room-body">
+    <section class="card cal-card" aria-labelledby="cal-title">
+      <div class="cal-nav">
+        {% if prevWeek %}<a class="btn sm" href="?week={{ prevWeek }}">‹ {{ t('cal.prev') }}</a>{% else %}<span class="btn sm" aria-disabled="true">‹ {{ t('cal.prev') }}</span>{% endif %}
+        <h2 id="cal-title" class="wk">{{ t('cal.week', { n: weekNumber }) }} <span class="muted mono small">{{ weekStart | shortdate(lang) }} – {{ weekEnd | shortdate(lang) }}</span></h2>
+        {% if nextWeek %}<a class="btn sm" href="?week={{ nextWeek }}">{{ t('cal.next') }} ›</a>{% else %}<span class="btn sm" aria-disabled="true">{{ t('cal.next') }} ›</span>{% endif %}
+      </div>
+      <div class="cal-wrap">
+        <table class="cal">
+          <thead><tr><th scope="col"><span class="sr">{{ t('cal.time') }}</span></th>
+            {% for d in grid.days %}<th scope="col" class="{% if d.isToday %}today{% endif %}"><span>{{ d.date.setLocale(lang).toFormat('ccc') }}</span><b>{{ d.date.day }}</b></th>{% endfor %}
+          </tr></thead>
+          <tbody>
+          {% for row in grid.rows %}
+            {% set ri = loop.index0 %}
+            <tr class="{{ 'hour' if row.fullHour else 'half' }}">
+              <th scope="row">{% if row.fullHour %}{{ row.time }}{% endif %}</th>
+              {% for c in row.cells %}
+                {% set day = grid.days[loop.index0].date %}
+                <td class="c-{{ c.state }}{% if c.first %} bs{% endif %}{% if c.last %} be{% endif %}{% if c.selected %} sel{% endif %}{% if c.clash %} clash{% endif %}">
+                  {%- if c.state == 'free' -%}
+                    <a href="?week={{ week }}&amp;start={{ c.start | urlencode }}&amp;dur={{ panel.minutes if panel else 60 }}#panel" aria-label="{{ day.setLocale(lang).toFormat('cccc') }} {{ row.time }}, {{ t('cal.free') }}">{% if c.selected and panel and c.start == panel.startValue %}<span>{{ timerange(panel.start, panel.end) }}</span>{% endif %}</a>
+                  {%- elif c.state == 'busy' and c.first -%}<span>{{ t('cal.busy') }}</span>
+                  {%- elif c.state == 'mine' and c.first -%}<span>{{ t('cal.mine') }}</span>
+                  {%- elif c.state == 'closed' and ri == 0 -%}<span>{{ t('cal.closed') }}</span>
+                  {%- endif -%}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="legend"><span><i class="sw free"></i>{{ t('cal.free') }}</span><span><i class="sw busy"></i>{{ t('cal.busy') }}</span><span><i class="sw mine"></i>{{ t('cal.mine') }}</span><span><i class="sw sel"></i>{{ t('cal.selection') }}</span><span><i class="sw off"></i>{{ t('cal.closed_or_past') }}</span></p>
+    </section>
+
+    <aside class="panel card" id="panel" aria-labelledby="panel-title">
+      <h2 class="h-sm" id="panel-title">{{ t('booking.panel_title') }}</h2>
+      {% if panel %}
+        <p class="muted small">{{ panel.start | date(lang) }}</p>
+        <p class="range">{{ timerange(panel.start, panel.end) }}</p>
+        <form method="get" action="/bookings/new" class="form" id="booking-form">
+          <input type="hidden" name="room" value="{{ room.id }}">
+          <input type="hidden" name="week" value="{{ week }}">
+          <div class="two">
+            <div class="field"><label for="bk-start">{{ t('booking.start') }}</label>
+              <select class="input" id="bk-start" name="start">{% for o in panel.startOptions %}<option value="{{ o.value }}" {% if o.selected %}selected{% endif %}>{{ o.label }}</option>{% endfor %}</select></div>
+            <div class="field"><label for="bk-dur">{{ t('booking.duration') }}</label>
+              <select class="input" id="bk-dur" name="dur">{% for d in panel.durations %}<option value="{{ d }}" {% if d == panel.minutes %}selected{% endif %}>{{ d | duration(lang) }}</option>{% endfor %}</select></div>
+          </div>
+          {% if panel.error %}<p class="notice err" role="alert">{{ t(panel.error) }}</p>{% endif %}
+          {% include "partials/quota.njk" %}
+          <button class="btn primary lg block" type="submit">{{ t('booking.continue') }}</button>
+          <a class="btn ghost sm" href="?week={{ week }}">{{ t('booking.clear_selection') }}</a>
+        </form>
+      {% else %}
+        <p class="muted">{{ t('booking.hint') }}</p>
+        {% include "partials/quota.njk" %}
+      {% endif %}
+    </aside>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/room.js" defer></script>{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('nav.home') }}{% endblock %}
+{% block content %}
+<div class="stack">
+  <div><p class="eyebrow">{{ now | date(lang) }} · {{ now | time }}</p><h1 class="h-page">{{ t('dash.hello', { name: user.displayName }) }}</h1></div>
+  <div class="dash">
+    <section class="card cta-card">
+      <div class="stack tight"><h2>{{ t('dash.cta_title') }}</h2><p class="muted">{{ t('dash.cta_text') }}</p></div>
+      <div><a class="btn primary lg" href="/rooms">{{ t('dash.cta_button') }}</a></div>
+    </section>
+    <section class="card">
+      <div class="sec-head"><h2>{{ t('dash.upcoming') }}</h2><span class="chip accent">{{ t('dash.active_count', { n: activeCount, max: maxActive }) }}</span></div>
+      {% for b in upcoming %}
+        <div class="mini">
+          <div><b>{{ b.roomCode }}</b> · {{ b.roomName }}<br><span class="small muted">{{ b.start | date(lang) }}, <span class="mono">{{ timerange(b.start, b.end) }}</span></span></div>
+          <a class="btn sm" href="/bookings/{{ b.id }}/cancel">{{ t('my.cancel') }}</a>
+        </div>
+      {% else %}
+        <p class="muted">{{ t('dash.no_upcoming') }}</p>
+      {% endfor %}
+      <p class="mt"><a class="btn ghost sm" href="/my/bookings">{{ t('dash.all_bookings') }}</a></p>
+    </section>
+  </div>
+</div>
+{% endblock %}

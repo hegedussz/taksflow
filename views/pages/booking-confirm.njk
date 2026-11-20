@@ -1,0 +1,27 @@
+{% extends "layout.njk" %}
+{% block title %}{{ t('confirm.title') }}{% endblock %}
+{% block content %}
+<div class="narrow"><div class="card stack">
+  <h1 class="h-page">{{ t('confirm.title') }}</h1>
+  <dl class="sum">
+    <dt>{{ t('confirm.room') }}</dt><dd><b>{{ room.code }}</b> · {{ room.name }}</dd>
+    <dt>{{ t('confirm.place') }}</dt><dd>{{ room.buildingName }}{% if room.floor %}, {{ room.floor }}{% endif %}</dd>
+    <dt>{{ t('confirm.when') }}</dt><dd>{{ start | date(lang) }}<br><b class="mono">{{ timerange(start, end) }}</b> ({{ selection.minutes | duration(lang) }})</dd>
+    <dt>{{ t('confirm.reminder') }}</dt><dd>{{ t('confirm.reminder_on', { time: (reminderAt | time) }) if user.remindersEnabled else t('confirm.reminder_off') }}</dd>
+  </dl>
+  {% if error %}
+    <div class="notice err" role="alert">{{ t(error) }}</div>
+    <div class="actions"><a class="btn primary" href="/rooms/{{ room.id }}?week={{ week }}&amp;start={{ startValue | urlencode }}&amp;dur={{ selection.minutes }}#panel">{{ t('confirm.back') }}</a></div>
+  {% else %}
+    <p class="muted small">{{ t('confirm.note') }}</p>
+    <form method="post" action="/bookings" class="actions">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <input type="hidden" name="roomId" value="{{ room.id }}">
+      <input type="hidden" name="start" value="{{ startValue }}">
+      <input type="hidden" name="dur" value="{{ selection.minutes }}">
+      <a class="btn" href="/rooms/{{ room.id }}?week={{ week }}&amp;start={{ startValue | urlencode }}&amp;dur={{ selection.minutes }}#panel">{{ t('confirm.back') }}</a>
+      <button class="btn primary" type="submit">{{ t('confirm.submit') }}</button>
+    </form>
+  {% endif %}
+</div></div>
+{% endblock %}
