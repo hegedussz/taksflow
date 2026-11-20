@@ -30,6 +30,8 @@ A teljes, elfogadási kritériumokkal kiegészített leírás a [követelménydo
 | [Szekvenciadiagram](docs/architecture/szekvenciadiagram-foglalas.png) | Mi történik a háttérben egy foglaláskor |
 | [Osztálydiagram](docs/architecture/osztalydiagram.png) | Tartománymodell és szolgáltatási réteg |
 | [ADR-0001](docs/architecture/adr/0001-foglalasi-utkozesek-kezelese.md) | Hogyan akadályozzuk meg, hogy ketten ugyanazt az idősávot foglalják le |
+| [Felhasználói folyamatok](docs/ux/felhasznaloi-folyamatok.md) | A fő tevékenységek lépésről lépésre (user flow), képernyőlistával |
+| [Prototípus](docs/ux/prototipus.html) | Kattintható prototípus mockup és wireframe nézettel, böngészőben megnyitható |
 
 A diagramok forrásfájljai (`.drawio`) a képek mellett találhatók, és a [draw.io](https://app.diagrams.net) programmal szerkeszthetők.
 
@@ -52,6 +54,9 @@ A technológiai stack még nincs véglegesítve. Amit eddig rögzítettünk:
 │       ├── README.md            # a diagramok áttekintése
 │       ├── *.drawio / *.png     # UML-diagramok
 │       └── adr/                 # architekturális döntések
+│   └── ux/
+│       ├── felhasznaloi-folyamatok.md  # user flow
+│       └── prototipus.html             # kattintható prototípus
 └── README.md
 ```
 
