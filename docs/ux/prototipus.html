@@ -1,4 +1,8 @@
+<!doctype html>
+<html lang="hu">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>StudyRoom prototípus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -371,7 +375,8 @@ tr.inactive td{color:var(--muted)}
 .wf .cell.busy,.wf .sw.busy{background:var(--busy)}
 .wf .cal-closed{background:var(--closed)}
 </style>
-
+</head>
+<body>
 <div class="pbar" id="pbar"></div>
 <header class="hdr" id="hdr"></header>
 <main id="app"></main>
@@ -1309,3 +1314,5 @@ window.addEventListener('hashchange', () => {
   render();
 })();
 </script>
+</body>
+</html>
